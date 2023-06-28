@@ -1,0 +1,5 @@
+<form style="display:inline-block" [formGroup]="form">
+    <div class="sli-rating "  [ngClass]="isDisabled === true ? 'sli-disabled' : ''" >
+        <ngx-star-rating   formControlName="rating" [id]="starId" [disabled] = "isDisabled"></ngx-star-rating>
+    </div>
+</form>

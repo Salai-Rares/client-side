@@ -1,0 +1,29 @@
+<div class="sli-card" >
+  <div class="image-container">
+    <a href="">
+      <img
+        class="image-responsive"
+        [src]="'https://picsum.photos/200/300'"
+        alt=""
+      />
+    </a>
+  </div>
+  <div class="lower-card">
+    <div class="sli-rating">
+      <app-stars-rating
+        [starId]="starID"
+        [isDisabled]="true"
+        [rating]="rating"
+      ></app-stars-rating>
+    </div>
+    <h2 class="name" [title]="productName">
+      <a href="" class="product-name">{{ (productName.length > 60) ? (productName | slice:0:60) + '...' :(productName) }} </a>
+    </h2>
+
+    <div class="content_price">
+        <span class="price">4.00 Lei</span>
+    </div>
+
+    <a href="#" class="sli-button"> Vezi produsul </a>
+  </div>
+</div>

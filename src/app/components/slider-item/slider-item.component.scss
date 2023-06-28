@@ -1,0 +1,89 @@
+@use "src/assets/styles/_colors.scss";
+@use "src/assets/styles/_fonts.scss";
+*{
+    text-decoration: none;
+}
+
+$font-size-xs:8px;
+
+.sli-card{
+    position: relative;
+    display: block;
+    margin: 0;
+    background-color: #fff;
+    border-radius: 3px;
+    border-width: 0;
+    width: 100%;
+    padding: 15px;
+    
+    color: #222;
+      text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 1px 5px -1px rgb(0 0 0 / 13%);
+    -webkit-transition: box-shadow .15s ease-in-out;
+    transition: box-shadow .15s ease-in-out;
+    text-align: center;
+    img{
+        object-fit: cover;
+    }
+}
+
+
+
+.product-name{
+    color: black;
+   
+    text-decoration: none;
+    &:hover{
+        color: aqua;
+        
+    }
+     
+        
+        font-size:fonts.$body-font-mobile;
+    
+    transition: color 200ms ease;
+}
+
+
+.image-responsive{
+    max-width: 100%;
+    height: auto;
+    aspect-ratio:  250 / 250;
+}
+
+.sli-disabled{
+::ng-deep label.star{
+    padding: 0 5px !important;
+    font-size: 20px !important;
+    
+    &:hover{
+        transform: none !important;
+    }
+}
+}
+
+.sli-rating{
+    display: flex;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.sli-button{
+    padding: 1.25rem 0.5rem;
+    background-color: colors.$black;
+    display: block;
+    border-radius: 3%;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+.detalii{
+    padding: 10px 5px;
+    cursor: pointer;
+}
+.lower-card{
+    min-height: 195px;
+}

@@ -1,1 +1,55 @@
+@use "assets/styles/_colors.scss";
+@use "assets/styles/_fonts.scss";
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+
+ 
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    
+    text-decoration: none;
+    outline: none;
+    border: none;
+    
+}
+
+*,*::after,*::after{
+    box-sizing: border-box;
+}
+
+$border : .2rem solid colors.$black;
+$box-shadow: 0 .5rem 1 rem (0,0,0,.2);
+
+@mixin grid($val) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax($val,1fr));
+    gap:2rem;
+}
+
+html{
+    overflow-x: hidden;
+    font-size:62.5%;
+    background-color: aqua;
+    &::-webkit-scrollbar{
+        width: 1rem;
+    }
+    &::-webkit-scrollbar-track{
+        background: colors.$light-bg;
+    }
+    &::-webkit-scrollbar-thumb{
+        background: colors.$blue;
+        border-radius: 5rem;
+    }
+
+   
+   
+}
+
+:root {
+    --swiper-theme-color: #E49A38;
+    
+  }
+
+  

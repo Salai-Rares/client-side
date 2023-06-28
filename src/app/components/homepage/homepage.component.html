@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <br>
+            <swiper [loop]="true" [allowTouchMove]="true"
+			[autoplay]="{  disableOnInteraction: false }"  [navigation]="true">
+			<ng-template data-swiper-autoplay="6000" swiperSlide>
+                <app-slider-banner-item [imgSrc]="'https://www.verdon.ro/themes/leotracy/img/tudor-banner.webp'"></app-slider-banner-item>
+
+               
+			</ng-template>
+
+			<ng-template data-swiper-autoplay="6000"  swiperSlide>
+				<app-slider-banner-item [imgSrc]="'https://www.verdon.ro/themes/leotracy/img/cyper90-cs1l.png'"></app-slider-banner-item>
+
+			</ng-template>
+
+			<ng-template data-swiper-autoplay="6000"  swiperSlide>
+				<app-slider-banner-item [imgSrc]="'https://www.verdon.ro/themes/leotracy/img/cyper90-cs1l.png'"></app-slider-banner-item>
+
+			</ng-template>
+		</swiper>
+            <br>
+            <swiper 
+            [navigation]="true"
+            [pagination]="{ clickable: true }"
+            [breakpoints]="breakpoints">
+                <ng-template swiperSlide *ngFor="let product of products$ | async">
+                    <app-slider-item  [productName]="product.title" [rating]="[2]"  [starID]="'1'" [imagePath]="product.imagePath" ></app-slider-item>
+                </ng-template>
+               
+         </swiper>
+         <app-product-create></app-product-create>
+        </div>
+    </div>
+</div>

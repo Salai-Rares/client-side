@@ -1,0 +1,22 @@
+// 320px — 480px: Mobile devices
+// 481px — 768px: iPads, Tablets
+// 769px — 1024px: Small screens, laptops
+// 1025px — 1200px: Desktops, large screens
+// 1201px and more —  Extra large screens, TV
+
+$width-desktop:1200px;
+$width-laptop:1024px;
+$width-tablet:768px;
+$width-mobile: 480px;
+
+
+$header-font:3.5rem;
+$sub-heading-font:3rem;
+$body-font:1.6rem;
+
+
+//-------------- Mobile fonts sizes ---------------//
+
+$body-font-mobile:1.5rem;
+$header-font-mobile:2rem;
+$sub-heading-font-mobile:1.8rem;

@@ -1,0 +1,13 @@
+.sli-disabled{
+    ::ng-deep label.star{
+        &:hover{
+            transform: none !important;
+        }
+    }
+    }
+    
+
+    ::ng-deep label.star{
+        padding: 0 5px !important;
+        font-size: inherit !important;
+    }

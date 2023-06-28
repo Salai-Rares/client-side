@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'client_front_site';
+  
+
+  constructor(){
+ 
+  }
 }

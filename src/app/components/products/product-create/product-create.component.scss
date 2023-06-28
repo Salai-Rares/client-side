@@ -1,0 +1,32 @@
+input[type="file"]{
+    visibility: hidden;
+}
+
+input{
+    border: 1px aqua solid;
+    width: 100%;
+}
+
+textarea{
+    border: 1px aqua solid;
+    width: 100%;
+    resize: none;
+}
+
+*{
+    margin: 3px 0px;
+}
+
+span{
+    display: block;
+}
+
+.image-preview {
+    height: 30rem;
+    margin: 1rem 0;
+  }
+  
+  .image-preview img {
+    height: 100%;
+  }
+  
