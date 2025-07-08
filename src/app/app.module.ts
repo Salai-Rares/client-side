@@ -3,47 +3,54 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { HeaderComponent } from './components/header/header.component';
 
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SwiperModule } from 'swiper/angular';
 
-import { SliderItemComponent } from './components/slider-item/slider-item.component';
-import { NgxStarRatingModule } from 'ngx-star-rating';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { StarsRatingComponent } from './components/stars-rating/stars-rating.component';
-import { HomepageComponent } from './components/homepage/homepage.component';
-import { SliderBannerItemComponent } from './components/slider-banner-item/slider-banner-item.component';
-import { ProductCreateComponent } from './components/products/product-create/product-create.component'
-import { HttpClientModule } from "@angular/common/http";
+import { SliderItemComponent } from './client/components/slider-item/slider-item.component';
+
+
+import { HomepageComponent } from './client/components/homepage/homepage.component';
+import { SliderBannerItemComponent } from './client/components/slider-banner-item/slider-banner-item.component';
+import { ProductCreateComponent } from './admin/components/product-create/product-create.component';
+
 import { AppRoutingModule } from './app-routing.module';
-import { ProductsGridComponent } from './components/products-grid/products-grid.component';
-import { ProductItemGridComponent } from './components/products-grid/product-item-grid/product-item-grid.component';
+
+import { FormControlPipe } from './shared/pipes/formcontrolpipe';
+import { CoreModule } from './core/core.module';
+import { HeaderModule } from './shared/components/header/header.module';
+import { ProductsModule } from './client/components/products/products.module';
+import { SharedModule } from './shared/shared.module';
+import { StarsRatingModule } from './shared/components/stars-rating/stars-rating.module';
+import { TestFormComponent } from './client/components/test-form/test-form.component';
+import { TestFormModule } from './client/components/test-form/test-form.module';
+import { ImageUploadComponent } from './client/components/image-upload/image-upload.component';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-
+    ProductCreateComponent,
     SliderItemComponent,
-    StarsRatingComponent,
     HomepageComponent,
     SliderBannerItemComponent,
-    ProductCreateComponent,
-    ProductsGridComponent,
-    ProductItemGridComponent
+    FormControlPipe,
+    ImageUploadComponent,
+    
+    
   ],
   imports: [
-    AppRoutingModule,
     BrowserModule,
-    FontAwesomeModule,
+    CoreModule,
+    ProductsModule,
+    
+    HeaderModule,
+    SharedModule,
     BrowserAnimationsModule,
     SwiperModule,
-    NgxStarRatingModule,
-    FormsModule, 
-    ReactiveFormsModule,
-    HttpClientModule
+    StarsRatingModule,
+    TestFormModule,
+    AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

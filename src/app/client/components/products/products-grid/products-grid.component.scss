@@ -1,0 +1,31 @@
+@use "src/assets/styles/_colors.scss";
+@use "src/assets/styles/_fonts.scss";
+
+.full-screen-left {
+  height: 100vh;
+  background-color: aquamarine;
+}
+
+.full-screen-right {
+  height: 100vh;
+  background-color: bisque;
+}
+
+.background-color-card {
+  background-color: black;
+  height: 30rem;
+}
+
+p{
+  margin : 1.5rem 0rem;
+  background-color: colors.$black;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 1rem ;
+}
+
+.checkbox-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

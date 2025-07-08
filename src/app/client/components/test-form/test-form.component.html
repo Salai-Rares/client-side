@@ -1,0 +1,190 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Username -->
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input id="username" formControlName="username" class="form-control" />
+  </div>
+
+  <!-- Settings Group -->
+  <div formGroupName="settings">
+    <div class="form-group">
+      <label for="threshold">Threshold</label>
+      <input
+        id="threshold"
+        type="number"
+        min="0"
+        formControlName="threshold"
+        class="form-control"
+      />
+    </div>
+
+    <!-- Tags -->
+    <div formArrayName="tags" class="form-array-section">
+      <h5>Tags</h5>
+      <div
+        *ngFor="let tagControl of tags.controls; let i = index"
+        class="input-group"
+      >
+        <input
+          [formControlName]="i"
+          class="form-control"
+          placeholder="Enter tag"
+        />
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          (click)="removeTag(i)"
+        >
+          Remove
+        </button>
+      </div>
+
+      <div *ngIf="tags.errors && (tags.dirty || tags.touched)" class="error-message">
+        <div *ngIf="tags.errors['emptyTag']">Tags cannot be empty.</div>
+        <div *ngIf="tags.errors['duplicateTag']">Tags must be unique.</div>
+      </div>
+
+      <button type="button" class="btn btn-outline-primary" (click)="addTag()">
+        Add Tag
+      </button>
+    </div>
+  </div>
+
+  <!-- Variants -->
+  <div formArrayName="variants" class="form-array-section">
+    <h5>Product Variants</h5>
+
+    <div
+      *ngFor="let variantGroup of variants.controls; let vIndex = index"
+      [formGroupName]="vIndex"
+      class="variant-card"
+    >
+      <!-- Price -->
+      <div class="form-group">
+        <label for="price-{{ vIndex }}">Price</label>
+        <input
+          id="price-{{ vIndex }}"
+          type="number"
+          formControlName="price"
+          class="form-control"
+          placeholder="Enter price"
+          min="0"
+        />
+      </div>
+
+      <!-- Product Options -->
+      <div formArrayName="productOptions" class="mb-3">
+        <label>Product Options</label>
+        <div
+          *ngFor="let option of getProductOptions(vIndex).controls; let oIndex = index"
+          [formGroupName]="oIndex"
+          class="row g-2 mb-2"
+        >
+          <div class="col">
+            <input
+              formControlName="key"
+              class="form-control"
+              placeholder="Option Key (e.g. size)"
+            />
+          </div>
+          <div class="col">
+            <input
+              formControlName="value"
+              class="form-control"
+              placeholder="Option Value (e.g. M)"
+            />
+          </div>
+          <div class="col-auto">
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="removeProductOption(vIndex, oIndex)"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="addProductOption(vIndex)"
+        >
+          Add Product Option
+        </button>
+      </div>
+
+      <!-- Images -->
+      <div formArrayName="images" class="mb-3">
+        <label>Variant Images</label>
+
+        <!-- Drag and Drop Area -->
+        <div
+          class="drop-zone"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event, vIndex)"
+          (click)="fileInput.click()"
+        >
+          Drag & drop images here or click to select
+          <input
+            #fileInput
+            type="file"
+            (change)="onImageSelected($event, vIndex)"
+            multiple
+            accept="image/*"
+            hidden
+          />
+        </div>
+
+        <!-- Preview row -->
+        <div class="image-preview-row">
+          <div
+            *ngFor="let imageGroup of getVariantImages(vIndex).controls; let iIndex = index"
+            [formGroupName]="iIndex"
+            class="image-wrapper"
+          >
+            <img
+              *ngIf="imageGroup.get('preview')?.value"
+              [src]="imageGroup.get('preview')?.value"
+            />
+            <button
+              type="button"
+              class="remove-image-btn"
+              (click)="removeVariantImage(vIndex, iIndex)"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remove Variant -->
+      <div class="text-end mt-3">
+        <button
+          type="button"
+          class="btn btn-danger w-100"
+          (click)="removeVariant(vIndex)"
+        >
+          Remove Variant
+        </button>
+      </div>
+    </div>
+
+    <!-- Add Variant -->
+    <div class="text-end">
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        (click)="addVariant()"
+      >
+        Add Variant
+      </button>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <button type="submit" class="btn btn-success mt-4" [disabled]="form.invalid">
+    Submit Form
+  </button>
+</form>
