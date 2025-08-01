@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ProductsService } from '../../../client/components/products/services/products.service';
 import { mimeType } from './mime-type.validator';
 
@@ -13,7 +13,7 @@ export class ProductCreateComponent implements OnInit {
   filePicker !: ElementRef;
   enteredTitle:string = "";
   enteredDescription:string = "";
-  form!:FormGroup;
+  form!:UntypedFormGroup;
   imagePreview?:string;
   
 
@@ -25,13 +25,13 @@ export class ProductCreateComponent implements OnInit {
 
   ngOnInit(): void {
   
-    this.form = new FormGroup({
-      title: new FormControl(null,{
+    this.form = new UntypedFormGroup({
+      title: new UntypedFormControl(null,{
         validators:[Validators.required,Validators.minLength(3)]
       }),
-      description:new FormControl(null,{validators:[Validators.required,Validators.minLength(5)]
+      description:new UntypedFormControl(null,{validators:[Validators.required,Validators.minLength(5)]
       }),
-      image: new FormControl(null,{
+      image: new UntypedFormControl(null,{
         validators:[Validators.required],
         asyncValidators:[mimeType]
       })

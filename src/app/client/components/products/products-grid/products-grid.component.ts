@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FilterService } from './services/filtering.service';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 
 
 @Component({
@@ -11,13 +11,13 @@ import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 })
 export class ProductsGridComponent implements OnInit {
   filter: any;
-  dynamicFormFilter!: FormGroup;
+  dynamicFormFilter!: UntypedFormGroup;
   checkedCheckboxes!: {
     key: string;
     checkboxes: { checked: boolean; count: number; value: string }[];
   }[];
 
-  constructor(private filterService: FilterService, private fb: FormBuilder) {
+  constructor(private filterService: FilterService, private fb: UntypedFormBuilder) {
     console.log('constructor called');
   }
 
@@ -43,10 +43,10 @@ export class ProductsGridComponent implements OnInit {
     console.log(this.dynamicFormFilter);
   }
 
-  getCheckboxControl(groupIndex: number, checkboxIndex: number): FormControl {
+  getCheckboxControl(groupIndex: number, checkboxIndex: number): UntypedFormControl {
     return this.dynamicFormFilter.get(
       `${groupIndex} - ${checkboxIndex}`
-    ) as FormControl;
+    ) as UntypedFormControl;
   }
 
   onCheckboxChange(groupIndex: number, checkboxIndex: number) {

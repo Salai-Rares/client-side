@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
-  FormBuilder,
+  UntypedFormArray,
+  UntypedFormBuilder,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
@@ -15,9 +15,9 @@ import {
   styleUrls: ['./test-form.component.scss'],
 })
 export class TestFormComponent {
-  form: FormGroup;
+  form: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.form = this.fb.group({
       username: ['', Validators.required],
       settings: this.fb.group({
@@ -32,8 +32,8 @@ export class TestFormComponent {
   }
 
   // getter for easy access to FormArray
-  get tags(): FormArray {
-    return this.form.get('settings.tags') as FormArray;
+  get tags(): UntypedFormArray {
+    return this.form.get('settings.tags') as UntypedFormArray;
   }
 
   addTag() {
@@ -51,7 +51,7 @@ export class TestFormComponent {
   }
 
   validateTagsArray(control: AbstractControl): ValidationErrors | null {
-    if (!(control instanceof FormArray)) return null;
+    if (!(control instanceof UntypedFormArray)) return null;
 
     const tags = control.controls.map((ctrl) => ctrl.value?.trim());
     const hasEmpty = tags.some((tag) => !tag);
@@ -64,23 +64,23 @@ export class TestFormComponent {
     return Object.keys(errors).length ? errors : null;
   }
 
-  get variants(): FormArray {
-    return this.form.get('variants') as FormArray;
+  get variants(): UntypedFormArray {
+    return this.form.get('variants') as UntypedFormArray;
   }
-  createVariantGroup(): FormGroup {
+  createVariantGroup(): UntypedFormGroup {
     return this.fb.group({
       price: [0, [Validators.required, Validators.min(0)]],
       productOptions: this.fb.array([this.createProductOptionGroup()]),
       images: this.fb.array([this.createImageGroup()]),
     });
   }
-  createProductOptionGroup(): FormGroup {
+  createProductOptionGroup(): UntypedFormGroup {
     return this.fb.group({
       key: ['', Validators.required],
       value: ['', Validators.required],
     });
   }
-  createImageGroup(): FormGroup {
+  createImageGroup(): UntypedFormGroup {
     return this.fb.group({
       file: [null, Validators.required],
       preview: [''],
@@ -94,8 +94,8 @@ export class TestFormComponent {
     this.variants.removeAt(index);
   }
 
-  getProductOptions(variantIndex: number): FormArray {
-    return this.variants.at(variantIndex).get('productOptions') as FormArray;
+  getProductOptions(variantIndex: number): UntypedFormArray {
+    return this.variants.at(variantIndex).get('productOptions') as UntypedFormArray;
   }
 
   addProductOption(variantIndex: number) {
@@ -106,8 +106,8 @@ export class TestFormComponent {
     this.getProductOptions(variantIndex).removeAt(optionIndex);
   }
 
-  getVariantImages(variantIndex: number): FormArray {
-    return this.variants.at(variantIndex).get('images') as FormArray;
+  getVariantImages(variantIndex: number): UntypedFormArray {
+    return this.variants.at(variantIndex).get('images') as UntypedFormArray;
   }
 
   addVariantImage(variantIndex: number) {
