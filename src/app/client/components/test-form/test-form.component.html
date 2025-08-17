@@ -2,7 +2,17 @@
   <!-- Username -->
   <div class="form-group">
     <label for="username">Username</label>
-    <input id="username" formControlName="username" class="form-control" />
+    <input 
+      id="username" 
+      formControlName="username" 
+      class="form-control"
+      [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched"
+    />
+    <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="invalid-feedback">
+      <div *ngIf="form.get('username')?.errors?.['required']">
+        Username is required.
+      </div>
+    </div>
   </div>
 
   <!-- Settings Group -->
@@ -15,7 +25,16 @@
         min="0"
         formControlName="threshold"
         class="form-control"
+        [class.is-invalid]="form.get('settings.threshold')?.invalid && form.get('settings.threshold')?.touched"
       />
+      <div *ngIf="form.get('settings.threshold')?.invalid && form.get('settings.threshold')?.touched" class="invalid-feedback">
+        <div *ngIf="form.get('settings.threshold')?.errors?.['required']">
+          Threshold is required.
+        </div>
+        <div *ngIf="form.get('settings.threshold')?.errors?.['min']">
+          Threshold must be at least 0.
+        </div>
+      </div>
     </div>
 
     <!-- Tags -->
@@ -23,25 +42,36 @@
       <h5>Tags</h5>
       <div
         *ngFor="let tagControl of tags.controls; let i = index"
-        class="input-group"
+        class="input-group mb-2"
       >
         <input
           [formControlName]="i"
           class="form-control"
           placeholder="Enter tag"
+          [class.is-invalid]="tagControl.invalid && tagControl.touched"
         />
         <button
           type="button"
           class="btn btn-outline-danger"
           (click)="removeTag(i)"
+          [disabled]="tags.length <= 1"
         >
           Remove
         </button>
+        <!-- Individual tag error -->
+        <div *ngIf="tagControl.invalid && tagControl.touched" class="invalid-feedback d-block">
+          Tag cannot be empty.
+        </div>
       </div>
 
-      <div *ngIf="tags.errors && (tags.dirty || tags.touched)" class="error-message">
-        <div *ngIf="tags.errors['emptyTag']">Tags cannot be empty.</div>
-        <div *ngIf="tags.errors['duplicateTag']">Tags must be unique.</div>
+      <!-- Array-level validation errors -->
+      <div *ngIf="tags.errors && (tags.dirty || tags.touched)" class="alert alert-danger">
+        <div *ngIf="tags.errors['emptyTag']">
+          <i class="fas fa-exclamation-triangle"></i> Tags cannot be empty.
+        </div>
+        <div *ngIf="tags.errors['duplicateTag']">
+          <i class="fas fa-exclamation-triangle"></i> Tags must be unique.
+        </div>
       </div>
 
       <button type="button" class="btn btn-outline-primary" (click)="addTag()">
@@ -69,7 +99,16 @@
           class="form-control"
           placeholder="Enter price"
           min="0"
+          [class.is-invalid]="variantGroup.get('price')?.invalid && variantGroup.get('price')?.touched"
         />
+        <div *ngIf="variantGroup.get('price')?.invalid && variantGroup.get('price')?.touched" class="invalid-feedback">
+          <div *ngIf="variantGroup.get('price')?.errors?.['required']">
+            Price is required.
+          </div>
+          <div *ngIf="variantGroup.get('price')?.errors?.['min']">
+            Price must be at least 0.
+          </div>
+        </div>
       </div>
 
       <!-- Product Options -->
@@ -85,14 +124,22 @@
               formControlName="key"
               class="form-control"
               placeholder="Option Key (e.g. size)"
+              [class.is-invalid]="option.get('key')?.invalid && option.get('key')?.touched"
             />
+            <div *ngIf="option.get('key')?.invalid && option.get('key')?.touched" class="invalid-feedback">
+              Option key is required.
+            </div>
           </div>
           <div class="col">
             <input
               formControlName="value"
               class="form-control"
               placeholder="Option Value (e.g. M)"
+              [class.is-invalid]="option.get('value')?.invalid && option.get('value')?.touched"
             />
+            <div *ngIf="option.get('value')?.invalid && option.get('value')?.touched" class="invalid-feedback">
+              Option value is required.
+            </div>
           </div>
           <div class="col-auto">
             <button
@@ -114,47 +161,114 @@
         </button>
       </div>
 
-      <!-- Images -->
+      <!-- Images with Drag & Drop -->
       <div formArrayName="images" class="mb-3">
         <label>Variant Images</label>
 
         <!-- Drag and Drop Area -->
         <div
           class="drop-zone"
+          [class.drag-over]="isDragOver"
+          [class.processing]="isProcessingImages(vIndex)"
           (dragover)="onDragOver($event)"
           (dragleave)="onDragLeave($event)"
           (drop)="onDrop($event, vIndex)"
-          (click)="fileInput.click()"
+          (click)="!isProcessingImages(vIndex) && fileInput.click()"
         >
-          Drag & drop images here or click to select
+          <div *ngIf="!isProcessingImages(vIndex)">
+            Drag & drop images here or click to select
+            <div class="file-info">
+              Max size: 5MB | Formats: JPEG, PNG, WebP | Min: 100x100px | Max: 2000x2000px
+            </div>
+          </div>
+
+          <div *ngIf="isProcessingImages(vIndex)" class="processing-indicator">
+            <div class="spinner"></div>
+            Processing images...
+          </div>
+
           <input
             #fileInput
             type="file"
             (change)="onImageSelected($event, vIndex)"
             multiple
-            accept="image/*"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            [disabled]="isProcessingImages(vIndex)"
             hidden
           />
         </div>
 
-        <!-- Preview row -->
-        <div class="image-preview-row">
+        <!-- Error Messages -->
+        <div *ngIf="hasImageErrors(vIndex)" class="error-messages">
+          <div class="error-header">
+            <span>Some images could not be processed:</span>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="clearImageErrors(vIndex)"
+            >
+              Dismiss
+            </button>
+          </div>
+          <ul class="error-list">
+            <li *ngFor="let error of getImageErrors(vIndex)" class="error-item">
+              {{ error }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Images Array Validation -->
+        <div *ngIf="getVariantImages(vIndex).invalid && getVariantImages(vIndex).touched" class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span *ngIf="getVariantImages(vIndex).errors?.['required']">
+            At least one image is required for this variant.
+          </span>
+          <span *ngIf="getVariantImages(vIndex).errors?.['minlength']">
+            This variant needs at least {{ getVariantImages(vIndex).errors?.['minlength']?.requiredLength }} image(s).
+          </span>
+        </div>
+
+        <!-- Image Preview Row with CDK Drop List -->
+        <div
+          class="image-preview-row cdk-drop-list"
+          cdkDropList
+          [cdkDropListData]="getVariantImages(vIndex).controls"
+          cdkDropListOrientation="horizontal"
+          (cdkDropListDropped)="drop($event, vIndex)"
+          [class.has-images]="getVariantImages(vIndex).length > 0"
+        >
           <div
-            *ngFor="let imageGroup of getVariantImages(vIndex).controls; let iIndex = index"
+            *ngFor="let imageGroup of getVariantImages(vIndex).controls; let iIndex = index; trackBy: trackByImageIndex"
+            cdkDrag
             [formGroupName]="iIndex"
             class="image-wrapper"
           >
             <img
               *ngIf="imageGroup.get('preview')?.value"
               [src]="imageGroup.get('preview')?.value"
+              [alt]="'Variant image ' + (iIndex + 1)"
+              class="clickable-image"
+              (click)="openImageModal(imageGroup.get('preview')?.value)"
             />
+
+            <!-- File info overlay -->
+            <div class="image-info" *ngIf="imageGroup.get('file')?.value">
+              <small>{{ getReadableFileSize(imageGroup.get("file")?.value?.size) }}</small>
+            </div>
+
             <button
               type="button"
               class="remove-image-btn"
               (click)="removeVariantImage(vIndex, iIndex)"
+              [attr.aria-label]="'Remove image ' + (iIndex + 1)"
             >
               &times;
             </button>
+          </div>
+
+          <!-- Empty state message -->
+          <div *ngIf="getVariantImages(vIndex).length === 0" class="empty-state">
+            No images uploaded yet
           </div>
         </div>
       </div>
@@ -165,6 +279,7 @@
           type="button"
           class="btn btn-danger w-100"
           (click)="removeVariant(vIndex)"
+          [disabled]="variants.length <= 1"
         >
           Remove Variant
         </button>
@@ -183,8 +298,64 @@
     </div>
   </div>
 
-  <!-- Submit -->
-  <button type="submit" class="btn btn-success mt-4" [disabled]="form.invalid">
-    Submit Form
+  <!-- Submit Button - OPTION 1: Always Enable Submit -->
+  <button 
+    type="submit" 
+    class="btn mt-4"
+    [class.btn-success]="form.valid"
+    [class.btn-warning]="form.invalid && !isFormSubmitAttempted"
+    [class.btn-danger]="form.invalid && isFormSubmitAttempted"
+    [disabled]="hasAnyProcessing()"
+  >
+    <span *ngIf="!hasAnyProcessing() && form.valid">
+      <i class="fas fa-check me-2"></i>Submit Form
+    </span>
+    <span *ngIf="!hasAnyProcessing() && form.invalid && !isFormSubmitAttempted">
+      <i class="fas fa-paper-plane me-2"></i>Submit Form
+    </span>
+    <span *ngIf="!hasAnyProcessing() && form.invalid && isFormSubmitAttempted">
+      <i class="fas fa-exclamation-triangle me-2"></i>Fix {{ getErrorCount() }} Error{{ getErrorCount() === 1 ? '' : 's' }} & Submit
+    </span>
+    <span *ngIf="hasAnyProcessing()">
+      <i class="spinner-border spinner-border-sm me-2"></i>
+      Processing...
+    </span>
   </button>
+
+  <!-- Form-level validation summary - Shows after submit attempt -->
+  <div *ngIf="form.invalid && isFormSubmitAttempted" class="alert alert-danger mt-3">
+    <h6><i class="fas fa-exclamation-triangle"></i> Please fix the following {{ getErrorCount() }} error{{ getErrorCount() === 1 ? '' : 's' }}:</h6>
+    <ul class="mb-0">
+      <li *ngIf="form.get('username')?.invalid">Username is required</li>
+      <li *ngIf="form.get('settings.threshold')?.invalid">Threshold is required and must be at least 0</li>
+      <li *ngIf="tags.invalid">Tags must be valid and unique</li>
+      <li *ngFor="let variant of variants.controls; let vIndex = index">
+        <span *ngIf="variant.invalid">
+          Variant {{ vIndex + 1 }}: 
+          <span *ngIf="variant.get('price')?.invalid">Price required, </span>
+          <span *ngIf="getProductOptions(vIndex).invalid">Product options required, </span>
+          <span *ngIf="getVariantImages(vIndex).invalid">Images required</span>
+        </span>
+      </li>
+    </ul>
+    <button 
+      type="button" 
+      class="btn btn-outline-light btn-sm mt-2"
+      (click)="scrollToFirstError()"
+    >
+      <i class="fas fa-arrow-up me-1"></i>Go to First Error
+    </button>
+  </div>
 </form>
+
+<!-- Image Modal -->
+<div
+  *ngIf="selectedImage"
+  class="image-modal-backdrop"
+  (click)="closeImageModal()"
+>
+  <div class="image-modal" (click)="$event.stopPropagation()">
+    <img [src]="selectedImage" alt="Enlarged view" />
+    <button class="modal-close-btn" (click)="closeImageModal()">&times;</button>
+  </div>
+</div>

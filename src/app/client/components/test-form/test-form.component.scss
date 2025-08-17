@@ -1,3 +1,4 @@
+// Main Form Styling
 form {
   max-width: 1000px;
   margin: 3rem auto;
@@ -11,6 +12,9 @@ form {
   h5 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
+    color: #1e293b;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
   }
 
   .form-group {
@@ -28,78 +32,7 @@ form {
   select.form-control {
     border-radius: 0.5rem;
     font-size: 1rem;
-  }
-
-  .form-array-section {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .variant-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .image-preview-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .image-wrapper {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    background-color: #f2f2f2;
-  }
-
-  .image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .remove-image-btn {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background-color: rgba(220, 53, 69, 0.9);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .drop-zone {
-    border: 2px dashed #ccc;
-    padding: 1rem;
-    text-align: center;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: border-color 0.3s;
-  }
-
-  .drop-zone.dragover {
-    border-color: #198754;
-    background-color: #eaf6ea;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 
   button[type='submit'] {
@@ -107,5 +40,644 @@ form {
     width: 100%;
     font-size: 1.1rem;
     padding: 0.75rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+    // Success state styling
+    &.btn-success {
+      background: linear-gradient(45deg, #28a745, #20c997);
+      border-color: #28a745;
+      
+      &:hover {
+        background: linear-gradient(45deg, #20c997, #17a2b8);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+      }
+    }
+    
+    // Warning state styling
+    &.btn-warning {
+      background: linear-gradient(45deg, #ffc107, #ff8c00);
+      border-color: #ffc107;
+      color: #000;
+      
+      &:hover {
+        background: linear-gradient(45deg, #ff8c00, #ff6b00);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+      }
+    }
+    
+    // Error state styling
+    &.btn-danger {
+      background: linear-gradient(45deg, #dc3545, #c82333);
+      border-color: #dc3545;
+      
+      &:hover {
+        background: linear-gradient(45deg, #c82333, #a71e2a);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+      }
+    }
+  }
+}
+
+// Form Array Section
+.form-array-section {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+// Variant Card
+.variant-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  
+  &:hover {
+    border-color: #cbd5e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// ============================================
+// VALIDATION ERROR STYLES
+// ============================================
+
+// Invalid input styling
+.form-control.is-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 5.8 2.4 2.4M8.2 5.8l-2.4 2.4'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  animation: shake 0.5s ease-in-out;
+  
+  &:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  }
+}
+
+// Valid input styling
+.form-control.ng-valid.ng-touched {
+  border-color: #28a745;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='m2.3 6.73.94-.94-.94-.94L1.36 6l.94.94zm2.56-6.54L6.8 2.13l-.94.94-1.94-1.94-.94.94L5.86 5l.94-.94z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  
+  &:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+  }
+}
+
+// Invalid feedback messages
+.invalid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  display: block;
+  
+  div {
+    margin-bottom: 0.25rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Input group with validation
+.input-group {
+  .form-control.is-invalid {
+    background-image: none; // Remove icon for input groups
+  }
+  
+  .invalid-feedback {
+    margin-top: 0.5rem;
+  }
+}
+
+// Alert styles for array-level validation
+.alert {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  animation: fadeInDown 0.3s ease-out;
+  
+  &.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+    
+    ul {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      
+      li {
+        margin-bottom: 0.25rem;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  
+  &.alert-warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// ============================================
+// VALIDATION HIGHLIGHT ANIMATION
+// ============================================
+
+.validation-highlight {
+  animation: validationPulse 2s ease-in-out;
+  border: 2px solid #dc3545 !important;
+}
+
+@keyframes validationPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Drag and Drop Zone - Optimized
+.drop-zone {
+  min-height: 120px;
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 15px;
+  position: relative;
+  
+  &:hover {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #3b82f6;
+  }
+  
+  &.drag-over {
+    border-color: #10b981;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    color: #10b981;
+    border-style: solid;
+    
+    &::before {
+      content: 'Drop images here!';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 600;
+      font-size: 16px;
+    }
+  }
+  
+  &.processing {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  
+  // File info in drop zone
+  .file-info {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 8px;
+    font-style: italic;
+  }
+}
+
+// Processing indicator
+.processing-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #3b82f6;
+  font-weight: 500;
+  
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Error messages for image processing
+.error-messages {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 15px;
+  
+  .error-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #dc2626;
+  }
+  
+  .error-list {
+    margin: 0;
+    padding-left: 16px;
+    color: #991b1b;
+    font-size: 0.875rem;
+    
+    .error-item {
+      margin-bottom: 4px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Image Preview Row Container - Optimized
+.image-preview-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 15px;
+  min-height: 140px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  position: relative;
+  
+  &.has-images {
+    background-color: #f8fafc;
+  }
+  
+  .empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 140px;
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 0.875rem;
+  }
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+// Individual Image Wrapper - Performance Optimized
+.image-wrapper {
+  position: relative; // This is crucial for absolute positioning of children
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  cursor: grab;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  will-change: transform;
+  
+  &:hover:not(.cdk-drag-disabled) {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    
+    .remove-image-btn {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .image-info {
+      opacity: 1;
+    }
+  }
+  
+  &:active {
+    cursor: grabbing;
+  }
+  
+  // Image inside wrapper - Optimized
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    display: block; // Ensures no extra spacing
+  }
+  
+  // Enhanced image wrapper with file info
+  .image-info {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
+
+// Remove Button - Clean X Shape (Better Centered)
+.remove-image-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  line-height: 1;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-family: Arial, sans-serif;
+  
+  // Force perfect centering
+  &:before {
+    content: '';
+    display: inline-block;
+  }
+  
+  &:hover {
+    opacity: 1;
+    transform: scale(1.2);
+    color: #ef4444;
+    text-shadow: 
+      0 0 8px rgba(239, 68, 68, 0.8),
+      1px 1px 2px rgba(0, 0, 0, 0.8);
+    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
+  }
+  
+  &:active {
+    transform: scale(1.1);
+  }
+}
+
+// CDK Drag States - Performance Optimized
+.cdk-drag-preview {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  transform: rotate(2deg);
+  will-change: transform;
+  
+  .remove-image-btn {
+    display: none;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.4;
+  border: 2px dashed #94a3b8;
+  background: #f1f5f9;
+  
+  img {
+    opacity: 0.3;
+  }
+}
+
+.cdk-drag-animating {
+  transition: transform 200ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+// Drop List States - Optimized
+.cdk-drop-list-dragging .image-wrapper:not(.cdk-drag-placeholder) {
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.image-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.image-modal {
+  position: relative;
+  max-width: 90vw;   /* Max width of modal */
+  max-height: 90vh;  /* Max height of modal */
+  cursor: default;
+  display: flex;
+  justify-content: center;
+  align-items: center;  /* Ensures image is centered vertically and horizontally */
+  overflow: hidden; /* Ensures no scrollbars if image exceeds bounds */
+}
+
+.image-modal img {
+  max-width: 100%;    /* Ensures the image is not wider than the modal */
+  max-height: 100%;   /* Ensures the image is not taller than the modal */
+  object-fit: contain; /* Ensures the image maintains its aspect ratio */
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(239, 68, 68, 0.9);
+    transform: scale(1.1);
+  }
+}
+
+.clickable-image {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Submit button states
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.125em;
+  animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  form {
+    margin: 1rem;
+    padding: 1.5rem;
+    
+    button[type='submit'] {
+      &:hover {
+        transform: none; // Disable hover transforms on mobile
+      }
+    }
+  }
+  
+  .image-preview-row {
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .image-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .drop-zone {
+    min-height: 100px;
+    padding: 20px;
+    font-size: 14px;
+    
+    .file-info {
+      font-size: 0.7rem;
+    }
+  }
+  
+  .invalid-feedback {
+    font-size: 0.8rem;
+  }
+  
+  .error-messages {
+    padding: 8px;
+
+    .error-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+  
+  .alert {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
   }
 }
