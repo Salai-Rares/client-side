@@ -8,7 +8,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { ImageValidationConfig, ImageProcessingService, ProcessedImage } from 'src/app/shared/services/image-processing.service';
+import {
+  ImageValidationConfig,
+  ImageProcessingService,
+  ProcessedImage,
+} from 'src/app/shared/services/image-processing.service';
 
 @Component({
   selector: 'app-test-form',
@@ -21,7 +25,7 @@ export class TestFormComponent {
   selectedImage: string | null = null;
   processingImages: { [variantIndex: number]: boolean } = {};
   imageErrors: { [variantIndex: number]: string[] } = {};
-  
+
   // Track if form submission has been attempted
   isFormSubmitAttempted = false;
 
@@ -32,7 +36,7 @@ export class TestFormComponent {
     maxWidth: 2000,
     maxHeight: 2000,
     minWidth: 100,
-    minHeight: 100
+    minHeight: 100,
   };
 
   constructor(
@@ -83,9 +87,11 @@ export class TestFormComponent {
   validateTagsArray(control: AbstractControl): ValidationErrors | null {
     if (!(control instanceof FormArray)) return null;
 
-    const tags = control.controls.map((ctrl) => ctrl.value?.trim()).filter(tag => tag);
+    const tags = control.controls
+      .map((ctrl) => ctrl.value?.trim())
+      .filter((tag) => tag);
     const allValues = control.controls.map((ctrl) => ctrl.value?.trim());
-    
+
     const hasEmpty = allValues.some((tag) => !tag);
     const duplicates = new Set(tags).size !== tags.length;
 
@@ -179,11 +185,11 @@ export class TestFormComponent {
   onImageSelected(event: Event, variantIndex: number) {
     const input = event.target as HTMLInputElement;
     const files = input.files;
-    
+
     if (files && files.length > 0) {
       this.handleFileInput(files, variantIndex);
     }
-    
+
     // Reset input value to allow same file selection again
     input.value = '';
   }
@@ -193,23 +199,27 @@ export class TestFormComponent {
     this.processingImages[variantIndex] = true;
     this.imageErrors[variantIndex] = [];
 
-    this.imageProcessingService.processFiles(files, this.imageConfig)
+    this.imageProcessingService
+      .processFiles(files, this.imageConfig)
       .subscribe({
         next: (processedImages: ProcessedImage[]) => {
-          const validImages = processedImages.filter(img => img.isValid);
-          const invalidImages = processedImages.filter(img => !img.isValid);
+          const validImages = processedImages.filter((img) => img.isValid);
+          const invalidImages = processedImages.filter((img) => !img.isValid);
 
           // Add valid images to form
           const imagesArray = this.getVariantImages(variantIndex);
-          validImages.forEach(processedImage => {
-            const imageGroup = this.createImageGroup(processedImage.file, processedImage.preview);
+          validImages.forEach((processedImage) => {
+            const imageGroup = this.createImageGroup(
+              processedImage.file,
+              processedImage.preview
+            );
             imagesArray.push(imageGroup);
           });
 
           // Track errors for invalid images
           if (invalidImages.length > 0) {
-            this.imageErrors[variantIndex] = invalidImages.map(img => 
-              `${img.file.name}: ${img.error}`
+            this.imageErrors[variantIndex] = invalidImages.map(
+              (img) => `${img.file.name}: ${img.error}`
             );
           }
 
@@ -217,9 +227,11 @@ export class TestFormComponent {
         },
         error: (error) => {
           console.error('Error processing images:', error);
-          this.imageErrors[variantIndex] = ['Failed to process images. Please try again.'];
+          this.imageErrors[variantIndex] = [
+            'Failed to process images. Please try again.',
+          ];
           this.processingImages[variantIndex] = false;
-        }
+        },
       });
   }
 
@@ -227,11 +239,11 @@ export class TestFormComponent {
   drop(event: CdkDragDrop<any[]>, variantIndex: number): void {
     const imagesArray = this.getVariantImages(variantIndex);
     const { previousIndex, currentIndex } = event;
-    
+
     // Remove the control from its current position
     const movedControl = imagesArray.at(previousIndex);
     imagesArray.removeAt(previousIndex);
-    
+
     // Insert it at the new position
     imagesArray.insert(currentIndex, movedControl);
   }
@@ -259,7 +271,9 @@ export class TestFormComponent {
 
   // Check if any variant is processing images
   hasAnyProcessing(): boolean {
-    return Object.values(this.processingImages).some(processing => processing);
+    return Object.values(this.processingImages).some(
+      (processing) => processing
+    );
   }
 
   // Get total number of validation errors
@@ -271,14 +285,14 @@ export class TestFormComponent {
   private getFormValidationErrors(form: FormGroup | FormArray): any[] {
     let formErrors: any[] = [];
 
-    Object.keys(form.controls).forEach(key => {
+    Object.keys(form.controls).forEach((key) => {
       const control = form.get(key);
       const controlErrors: ValidationErrors | null = control?.errors ?? null;
-      
+
       if (controlErrors && control?.touched) {
         formErrors.push({
           control: key,
-          errors: controlErrors
+          errors: controlErrors,
         });
       }
 
@@ -293,24 +307,29 @@ export class TestFormComponent {
   // Enhanced onSubmit with better validation handling
   onSubmit() {
     this.isFormSubmitAttempted = true;
-    
+
     // Check if any images are still processing
     if (this.hasAnyProcessing()) {
-      this.showValidationMessage('Please wait for image processing to complete before submitting.');
+      this.showValidationMessage(
+        'Please wait for image processing to complete before submitting.'
+      );
       return;
     }
 
     if (this.form.valid) {
       console.log('Form Value:', this.form.value);
-      
+
       // Log image file information for debugging
       this.variants.controls.forEach((variant, vIndex) => {
         const images = this.getVariantImages(vIndex);
-        console.log(`Variant ${vIndex} images:`, 
+        console.log(
+          `Variant ${vIndex} images:`,
           images.controls.map((img, iIndex) => ({
             index: iIndex,
             fileName: img.get('file')?.value?.name,
-            fileSize: this.getReadableFileSize(img.get('file')?.value?.size || 0)
+            fileSize: this.getReadableFileSize(
+              img.get('file')?.value?.size || 0
+            ),
           }))
         );
       });
@@ -320,11 +339,10 @@ export class TestFormComponent {
     } else {
       console.log('Form is invalid - showing errors');
       this.markFormGroupTouched(this.form);
-      this.scrollToFirstError();
-      
+
       // Show validation message
       this.showValidationMessage(
-        `Please fix ${this.getErrorCount()} error(s) before submitting.`, 
+        `Please fix ${this.getErrorCount()} error(s) before submitting.`,
         'warning'
       );
     }
@@ -334,70 +352,32 @@ export class TestFormComponent {
   private submitForm() {
     // Show success message or navigate to success page
     console.log('Submitting form...');
-    
+
     // Example: Show success message
     this.showValidationMessage('Form submitted successfully!', 'success');
-    
+
     // Example: Reset form after successful submission
     this.resetForm();
   }
 
-  // Enhanced scroll to first error with smooth animation
-  scrollToFirstError() {
-    setTimeout(() => {
-      const selectors = [
-        '.is-invalid',
-        '.alert-danger',
-        '.alert-warning',
-        '.ng-invalid.ng-touched'
-      ];
-      
-      for (const selector of selectors) {
-        const firstErrorElement = document.querySelector(selector) as HTMLElement;
-        if (firstErrorElement) {
-          // Scroll with offset for fixed headers
-          const elementTop = firstErrorElement.offsetTop;
-          const offset = 100; // Adjust based on your header height
-          
-          window.scrollTo({
-            top: elementTop - offset,
-            behavior: 'smooth'
-          });
-          
-          // Focus the element if it's an input
-          if (firstErrorElement.tagName === 'INPUT' || firstErrorElement.tagName === 'TEXTAREA') {
-            firstErrorElement.focus();
-          }
-          
-          // Add a highlight animation
-          firstErrorElement.classList.add('validation-highlight');
-          setTimeout(() => {
-            firstErrorElement.classList.remove('validation-highlight');
-          }, 2000);
-          
-          break;
-        }
-      }
-    }, 100);
-  }
-
   // Show validation messages with different types
-  private showValidationMessage(message: string, type: 'error' | 'success' | 'warning' = 'error') {
+  private showValidationMessage(
+    message: string,
+    type: 'error' | 'success' | 'warning' = 'error'
+  ) {
     // Simple implementation - replace with your preferred notification system
     console.log(`${type.toUpperCase()}: ${message}`);
-    
+
     // Example with browser notification:
     // this.notificationService.show(message, type);
-    
+
     // Example with toast:
     // this.toastr[type](message);
   }
 
   // Enhanced form group touched marking with focus management
   private markFormGroupTouched(formGroup: FormGroup, focusFirst = true) {
-    let firstInvalidControl: HTMLElement | null = null;
-    
-    Object.keys(formGroup.controls).forEach(field => {
+    Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);
       control?.markAsTouched({ onlySelf: true });
 
@@ -405,24 +385,13 @@ export class TestFormComponent {
         this.markFormGroupTouched(control, false);
       } else if (control instanceof FormArray) {
         control.markAsTouched({ onlySelf: true });
-        control.controls.forEach(arrayControl => {
+        control.controls.forEach((arrayControl) => {
           if (arrayControl instanceof FormGroup) {
             this.markFormGroupTouched(arrayControl, false);
           } else {
             arrayControl.markAsTouched({ onlySelf: true });
           }
         });
-      }
-
-      // Find first invalid field for focusing
-      if (focusFirst && !firstInvalidControl && control?.invalid) {
-        setTimeout(() => {
-          const element = document.querySelector(`[formControlName="${field}"]`) as HTMLElement;
-          if (element) {
-            element.focus();
-            firstInvalidControl = element;
-          }
-        }, 100);
       }
     });
   }
@@ -434,7 +403,7 @@ export class TestFormComponent {
     this.processingImages = {};
     this.imageErrors = {};
     this.selectedImage = null;
-    
+
     // Recreate initial form structure
     this.form = this.fb.group({
       username: ['', Validators.required],
