@@ -25,7 +25,7 @@
   display: none;
 }
 
-@media screen and(max-width:fonts.$width-tablet) {
+@media screen and (max-width:fonts.$width-tablet) {
   .wrapper-burger-center {
     display: flex;
   }
@@ -109,7 +109,7 @@
   }
 }
 
-@media screen and(max-width:fonts.$width-laptop) {
+@media screen and (max-width:fonts.$width-laptop) {
   .icons {
     span {
       display: none;

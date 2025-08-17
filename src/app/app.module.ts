@@ -21,7 +21,7 @@ import { CoreModule } from './core/core.module';
 import { HeaderModule } from './shared/components/header/header.module';
 import { ProductsModule } from './client/components/products/products.module';
 import { SharedModule } from './shared/shared.module';
-import { StarsRatingModule } from './shared/components/stars-rating/stars-rating.module';
+// import { StarsRatingModule } from './shared/components/stars-rating/stars-rating.module';
 import { TestFormComponent } from './client/components/test-form/test-form.component';
 import { TestFormModule } from './client/components/test-form/test-form.module';
 import { ImageUploadComponent } from './client/components/image-upload/image-upload.component';
@@ -46,7 +46,7 @@ import { ImageUploadComponent } from './client/components/image-upload/image-upl
     SharedModule,
     BrowserAnimationsModule,
     SwiperModule,
-    StarsRatingModule,
+    // StarsRatingModule,
     TestFormModule,
     AppRoutingModule
   ],
