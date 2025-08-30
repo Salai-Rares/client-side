@@ -1,9 +1,10 @@
 import { Component, OnInit ,Input } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder,Validators } from '@angular/forms';
 @Component({
-  selector: 'app-stars-rating',
-  templateUrl: './stars-rating.component.html',
-  styleUrls: ['./stars-rating.component.scss']
+    selector: 'app-stars-rating',
+    templateUrl: './stars-rating.component.html',
+    styleUrls: ['./stars-rating.component.scss'],
+    standalone: false
 })
 export class StarsRatingComponent implements OnInit {
   public form!: UntypedFormGroup;

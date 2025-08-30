@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-slider-item',
-  templateUrl: './slider-item.component.html',
-  styleUrls: ['./slider-item.component.scss'],
+    selector: 'app-slider-item',
+    templateUrl: './slider-item.component.html',
+    styleUrls: ['./slider-item.component.scss'],
+    standalone: false
 })
 export class SliderItemComponent implements OnInit {
   @Input() imagePath?: string;

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import {FilterService} from '../services/filtering.service'
 @Component({
-  selector: 'app-product-item-grid',
-  templateUrl: './product-item-grid.component.html',
-  styleUrls: ['./product-item-grid.component.scss']
+    selector: 'app-product-item-grid',
+    templateUrl: './product-item-grid.component.html',
+    styleUrls: ['./product-item-grid.component.scss'],
+    standalone: false
 })
 export class ProductItemGridComponent implements OnInit {
   @Input() imagePath?:string;

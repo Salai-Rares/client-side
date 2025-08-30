@@ -4,9 +4,10 @@ import { ProductsService } from '../../../client/components/products/services/pr
 import { mimeType } from './mime-type.validator';
 
 @Component({
-  selector: 'app-product-create',
-  templateUrl: './product-create.component.html',
-  styleUrls: ['./product-create.component.scss']
+    selector: 'app-product-create',
+    templateUrl: './product-create.component.html',
+    styleUrls: ['./product-create.component.scss'],
+    standalone: false
 })
 export class ProductCreateComponent implements OnInit {
   @ViewChild('filePicker')

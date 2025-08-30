@@ -15,41 +15,39 @@ import {
   AnimationEvent
 } from '@angular/animations'
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  animations:[
-    trigger('toggleNavLinks',[
-     
-       transition(':enter',[
-        style({
-          transform:'translateX(100%)'
-        }),
-        
-         animate('0.5s ease-in',style({
-          transform:'translateX(0%)'
-         })
-         
-         )]),
-         transition(':leave',[
-           animate('0.5s ease-in',style({
-            transform:'translateX(100%)'
-           })
-           )]),
-    ]),
-    trigger('listAnimation',[
-      transition('* => *',[
-        query(':enter',style({opacity:0}),{optional:true}),
-        query(':enter',stagger('300ms',[
-          animate('600ms ease-in',keyframes([
-            style({opacity : 0 ,offset : 0}),
-            style({opacity : 0.5 ,offset : 0.3}),
-            style({opacity : 1 ,offset : 1})
-          ]))
-        ]),{optional:true})
-      ])
-    ])
-  ]
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    animations: [
+        trigger('toggleNavLinks', [
+            transition(':enter', [
+                style({
+                    transform: 'translateX(100%)'
+                }),
+                animate('0.5s ease-in', style({
+                    transform: 'translateX(0%)'
+                }))
+            ]),
+            transition(':leave', [
+                animate('0.5s ease-in', style({
+                    transform: 'translateX(100%)'
+                }))
+            ]),
+        ]),
+        trigger('listAnimation', [
+            transition('* => *', [
+                query(':enter', style({ opacity: 0 }), { optional: true }),
+                query(':enter', stagger('300ms', [
+                    animate('600ms ease-in', keyframes([
+                        style({ opacity: 0, offset: 0 }),
+                        style({ opacity: 0.5, offset: 0.3 }),
+                        style({ opacity: 1, offset: 1 })
+                    ]))
+                ]), { optional: true })
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class HeaderComponent implements OnInit {
   //fa icons

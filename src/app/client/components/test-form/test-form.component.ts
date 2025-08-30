@@ -15,9 +15,10 @@ import {
 } from 'src/app/shared/services/image-processing.service';
 
 @Component({
-  selector: 'app-test-form',
-  templateUrl: './test-form.component.html',
-  styleUrls: ['./test-form.component.scss'],
+    selector: 'app-test-form',
+    templateUrl: './test-form.component.html',
+    styleUrls: ['./test-form.component.scss'],
+    standalone: false
 })
 export class TestFormComponent {
   form: FormGroup;

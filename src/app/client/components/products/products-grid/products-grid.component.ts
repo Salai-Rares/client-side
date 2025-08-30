@@ -4,10 +4,11 @@ import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl } from '@angul
 
 
 @Component({
-  selector: 'app-products-grid',
-  templateUrl: './products-grid.component.html',
-  styleUrls: ['./products-grid.component.scss'],
-  providers: [FilterService],
+    selector: 'app-products-grid',
+    templateUrl: './products-grid.component.html',
+    styleUrls: ['./products-grid.component.scss'],
+    providers: [FilterService],
+    standalone: false
 })
 export class ProductsGridComponent implements OnInit {
   filter: any;
