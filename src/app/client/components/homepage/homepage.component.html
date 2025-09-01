@@ -1,36 +1,54 @@
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <br>
-            <swiper [loop]="true" [allowTouchMove]="true"
-			[autoplay]="{  disableOnInteraction: false }"  [navigation]="true">
-			<ng-template data-swiper-autoplay="6000" swiperSlide>
-                <app-slider-banner-item [imgSrc]="'https://www.verdon.ro/themes/leotracy/img/tudor-banner.webp'"></app-slider-banner-item>
+  <div class="row">
+    <div class="col">
+      <br>
 
-               
-			</ng-template>
+      <!-- Banner slider -->
+      <swiper-container
+        loop="true"
+        allow-touch-move="true"
+        navigation="true"
+        autoplay-delay="6000"
+        autoplay-disable-on-interaction="false"
+      >
+        <swiper-slide>
+          <app-slider-banner-item
+            imgSrc="https://placehold.co/600x300?text=Banner+1">
+          </app-slider-banner-item>
+        </swiper-slide>
 
-			<ng-template data-swiper-autoplay="6000"  swiperSlide>
-				<app-slider-banner-item [imgSrc]="'https://www.verdon.ro/themes/leotracy/img/cyper90-cs1l.png'"></app-slider-banner-item>
+        <swiper-slide>
+          <app-slider-banner-item
+            imgSrc="https://placehold.co/600x300?text=Banner+2">
+          </app-slider-banner-item>
+        </swiper-slide>
 
-			</ng-template>
+        <swiper-slide>
+          <app-slider-banner-item
+            imgSrc="https://placehold.co/600x300?text=Banner+3">
+          </app-slider-banner-item>
+        </swiper-slide>
+      </swiper-container>
 
-			<ng-template data-swiper-autoplay="6000"  swiperSlide>
-				<app-slider-banner-item [imgSrc]="'https://www.verdon.ro/themes/leotracy/img/cyper90-cs1l.png'"></app-slider-banner-item>
+      <br>
 
-			</ng-template>
-		</swiper>
-            <br>
-            <swiper 
-            [navigation]="true"
-            [pagination]="{ clickable: true }"
-            [breakpoints]="breakpoints">
-                <ng-template swiperSlide *ngFor="let product of products$ | async">
-                    <app-slider-item  [productName]="product.title" [rating]="[2]"  [starID]="'1'" [imagePath]="product.imagePath" ></app-slider-item>
-                </ng-template>
-               
-         </swiper>
-         <app-product-create></app-product-create>
-        </div>
+      <!-- Products slider -->
+      <swiper-container
+        navigation="true"
+        pagination="true"
+        [attr.breakpoints]="breakpoints | json"
+      >
+        <swiper-slide *ngFor="let product of products$ | async">
+          <app-slider-item
+            [productName]="product.title"
+            [rating]="[2]"
+            [starID]="'1'"
+            [imagePath]="product.imagePath">
+          </app-slider-item>
+        </swiper-slide>
+      </swiper-container>
+
+      <app-product-create></app-product-create>
     </div>
+  </div>
 </div>

@@ -1,57 +1,61 @@
 <div class="container">
   <div class="row">
-    <ng-container *ngIf="dynamicFormFilter">
-    <form
-      [formGroup]="dynamicFormFilter"
-      class="col-lg-3 full-screen-left d-none d-lg-block"
-      (ngSubmit)="onSubmit()"
-    >
-    <div *ngFor="let group of filter.attributes; let i = index">
-      <p>{{group.key}}</p>
-      <div *ngFor="let checkbox of group.checkboxes; let j = index" class="form-check checkbox-container">
-        <label class="form-check-label">
-          <input type="checkbox" class="form-check-input"[formControl]="getCheckboxControl(i, j)" (change)="onCheckboxChange(i, j)" />
-          {{ checkbox.value }}
-        </label>
-        <label class="count-div">
-          ({{checkbox.count}})
-        </label>
-      </div>
-    </div>
-    <button type="submit">Submit</button>
-  </form>
-</ng-container>
+    @if (dynamicFormFilter) {
+      <form
+        [formGroup]="dynamicFormFilter"
+        class="col-lg-3 full-screen-left d-none d-lg-block"
+        (ngSubmit)="onSubmit()"
+        >
+        @for (group of filter.attributes; track group; let i = $index) {
+          <div>
+            <p>{{group.key}}</p>
+            @for (checkbox of group.checkboxes; track checkbox; let j = $index) {
+              <div class="form-check checkbox-container">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input"[formControl]="getCheckboxControl(i, j)" (change)="onCheckboxChange(i, j)" />
+                  {{ checkbox.value }}
+                </label>
+                <label class="count-div">
+                  ({{checkbox.count}})
+                </label>
+              </div>
+            }
+          </div>
+        }
+        <button type="submit">Submit</button>
+      </form>
+    }
 
-      <!-- <div formArrayName="attributesFilters" *ngFor="let filter of checkboxesFormArray.controls;let i = index">
-      <label  >
-        <input type="checkbox" [formControlName]="i" (change)="submit()">
-        {{ordersData[i].name}}
-      </label>
-    </div> -->
-    
-   
+    <!-- <div formArrayName="attributesFilters" *ngFor="let filter of checkboxesFormArray.controls;let i = index">
+    <label  >
+      <input type="checkbox" [formControlName]="i" (change)="submit()">
+      {{ordersData[i].name}}
+    </label>
+  </div> -->
 
-    <div class="col full-screen-right">
-      <div class="container">
-        <div class="row">
-          <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-            <app-product-item-grid></app-product-item-grid>
-          </div>
-          <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-            <app-product-item-grid></app-product-item-grid>
-          </div>
-          <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-            <app-product-item-grid></app-product-item-grid>
-          </div>
-          <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-            <app-product-item-grid></app-product-item-grid>
-          </div>
 
-          <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-            <app-product-item-grid></app-product-item-grid>
-          </div>
+
+  <div class="col full-screen-right">
+    <div class="container">
+      <div class="row">
+        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+          <app-product-item-grid></app-product-item-grid>
+        </div>
+        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+          <app-product-item-grid></app-product-item-grid>
+        </div>
+        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+          <app-product-item-grid></app-product-item-grid>
+        </div>
+        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+          <app-product-item-grid></app-product-item-grid>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+          <app-product-item-grid></app-product-item-grid>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>

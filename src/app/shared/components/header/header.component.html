@@ -1,64 +1,70 @@
 <header id="header">
-    <nav class="header-container">
-        <div class="container">
-            <div class="row">  
-                <div class="col-2 wrapper-burger-center " >
-                    <div class="burger" #toggleButton   (click)="hamburgerTogglerFunction()" >
-                        <div class="line1" [ngClass]="{'line1' : hamburgerToggler}" ></div>
-                        <div class="line2" [ngClass]="{'line2' : hamburgerToggler}" ></div>
-                        <div class="line3" [ngClass]="{'line3' : hamburgerToggler}" ></div>
-                    </div>
-                </div>
-                <div class="col-4 col-md-2 col-lg-2 logo-container">
-                    <a href="#" class="logo">
-                        <fa-icon [icon]="faStore"></fa-icon><span>shoppie</span>
-                    </a>
-                </div>
-                <div class="col-12 col-md-6  search-container d-flex justify-content-center align-items-center">
-                    <form action="" class="search-form">
-                        <input type="search" id="search-box" placeholder="caută aici...">
-                        <label for="search-box" ><fa-icon [icon]="faSearch"></fa-icon></label>
-                    </form>
-                </div>
-                <div class="col-6 col-md-4 col-lg-4 icons d-flex justify-content-between align-items-center ">     
-                    <a href="/">
-                        <div class="d-flex align-items-center">
-                            <fa-icon id = "menu-btn" aria-hidden="true" [icon]="faUser"></fa-icon>
-                            <span>Contul meu</span>
-                        </div>
-                    </a>
-                   
-                    <a href="/">
-                        <div class="d-flex align-items-center">
-                            <fa-icon [icon] = "faShoppingCart"></fa-icon>
-                            <span>Cosul meu</span>
-                        </div>  
-                    </a>
-                      
-                   
-                    <a href="/">
-                        <div class="d-flex align-items-center">
-                            <fa-icon [icon] = "faHeart" ></fa-icon>
-                            <span>Favorite</span>
-                      </div>
-                    </a>
-                </div>
-                <div class=" sub-nav full-bleed">
-                   <ul >
-                    <li *ngFor="let button of buttons;">
-                        <a [routerLink]="getTheValueOfKey(button)"><span>{{getTheNameOfKey(button)}}</span></a>
-                    </li>
-                   </ul>
-                </div>
-               
-                <ul *ngIf="hamburgerToggler" class="nav-links" #navLinksMenu [@toggleNavLinks] [@listAnimation]="buttons.length"  >
-                    <li *ngFor="let button of buttons;">
-                        <a [routerLink]="getTheValueOfKey(button)"><span>{{getTheNameOfKey(button)}}</span></a>
-                    </li>
-                </ul>
-            </div>
+  <nav class="header-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-2 wrapper-burger-center " >
+          <div class="burger" #toggleButton   (click)="hamburgerTogglerFunction()" >
+            <div class="line1" [ngClass]="{'line1' : hamburgerToggler}" ></div>
+            <div class="line2" [ngClass]="{'line2' : hamburgerToggler}" ></div>
+            <div class="line3" [ngClass]="{'line3' : hamburgerToggler}" ></div>
+          </div>
         </div>
-        
-    </nav>
-    
+        <div class="col-4 col-md-2 col-lg-2 logo-container">
+          <a href="#" class="logo">
+            <fa-icon [icon]="faStore"></fa-icon><span>shoppie</span>
+          </a>
+        </div>
+        <div class="col-12 col-md-6  search-container d-flex justify-content-center align-items-center">
+          <form action="" class="search-form">
+            <input type="search" id="search-box" placeholder="caută aici...">
+            <label for="search-box" ><fa-icon [icon]="faSearch"></fa-icon></label>
+          </form>
+        </div>
+        <div class="col-6 col-md-4 col-lg-4 icons d-flex justify-content-between align-items-center ">
+          <a href="/">
+            <div class="d-flex align-items-center">
+              <fa-icon id = "menu-btn" aria-hidden="true" [icon]="faUser"></fa-icon>
+              <span>Contul meu</span>
+            </div>
+          </a>
+
+          <a href="/">
+            <div class="d-flex align-items-center">
+              <fa-icon [icon] = "faShoppingCart"></fa-icon>
+              <span>Cosul meu</span>
+            </div>
+          </a>
+
+
+          <a href="/">
+            <div class="d-flex align-items-center">
+              <fa-icon [icon] = "faHeart" ></fa-icon>
+              <span>Favorite</span>
+            </div>
+          </a>
+        </div>
+        <div class=" sub-nav full-bleed">
+          <ul >
+            @for (button of buttons; track button) {
+              <li>
+                <a [routerLink]="getTheValueOfKey(button)"><span>{{getTheNameOfKey(button)}}</span></a>
+              </li>
+            }
+          </ul>
+        </div>
+
+        @if (hamburgerToggler) {
+          <ul class="nav-links" #navLinksMenu [@toggleNavLinks] [@listAnimation]="buttons.length"  >
+            @for (button of buttons; track button) {
+              <li>
+                <a [routerLink]="getTheValueOfKey(button)"><span>{{getTheNameOfKey(button)}}</span></a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+  </nav>
+
 </header>

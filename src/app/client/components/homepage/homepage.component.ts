@@ -1,22 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription ,Observable} from 'rxjs';
 import {ProductsService} from '../products/services/products.service'
-import SwiperCore , {
-  Navigation,
-  Pagination,
-  Scrollbar,
-  Autoplay
-  
-} from 'swiper';
+
 import { Product } from '../products/models/product.model';
 
-SwiperCore.use([
-  Navigation,
-  Pagination,
-  Scrollbar,
-  Autoplay
-  
-]);
+
 @Component({
     selector: 'app-homepage',
     templateUrl: './homepage.component.html',
