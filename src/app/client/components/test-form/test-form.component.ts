@@ -16,6 +16,7 @@ import {
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PRODUCT_LIMITS } from './product-validation.constants';
 import { FormErrorService } from 'src/app/shared/services/form-error.service';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-test-form',
@@ -42,7 +43,13 @@ export class TestFormComponent {
 
   // Track if form submission has been attempted
   isFormSubmitAttempted = false;
-  today = new Date().toLocaleDateString('en-CA');
+  today = new Date();
+
+  minDate: NgbDateStruct = {
+    year: this.today.getFullYear(),
+    month: this.today.getMonth() + 1, // JS months are 0-based
+    day: this.today.getDate(),
+  };
   // Image validation configuration
   private readonly imageConfig: ImageValidationConfig = {
     maxSizeInMB: 5,
@@ -96,7 +103,9 @@ export class TestFormComponent {
       discount: this.fb.group({
         type: this.fb.control([]),
         value: [0],
-        date: [null],
+        // date: [null],
+        validUntil: [null],
+        validRange: [null], // 👈 this will hold { fromDate, toDate }
       }),
       settings: this.fb.group({
         threshold: [5, [Validators.required, Validators.min(0)]],

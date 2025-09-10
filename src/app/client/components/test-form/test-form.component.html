@@ -157,29 +157,36 @@
       min="0"
     />
   </div>
-  <div class="form-group">
-    <div formGroupName="discount">
-      <div class="form-group">
-        <label for="type">Tip discount</label>
-        <ng-select
-          formControlName="type"
-          [items]="['fixed', 'percentage']"
-          id="type"
-        ></ng-select>
+  <div class="form-group form-array-section">
+    <h5>Discount*</h5>
+    <div formGroupName="discount" class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="type">Tip discount</label>
+          <ng-select
+            formControlName="type"
+            [items]="['fixed', 'percentage']"
+            id="type"
+          ></ng-select>
+        </div>
+        <div class="form-group">
+          <label for="value">Valoare</label>
+          <input
+            class="form-control"
+            formControlName="value"
+            type="number"
+            min="0"
+            id="value"
+          />
+        </div>
       </div>
-      <div class="form-group">
-        <label for="value">Valoare</label>
-        <input
-          class="form-control"
-          formControlName="value"
-          type="number"
-          min="0"
-          id="value"
-        />
-      </div>
+       <div class="col-md d-flex justify-content-md-center">
       <div class="form-group">
         <label for="date">Expiră în:</label>
-        <input min="{{today}}" class="form-control" type="date" formControlName="date">
+        <app-range-date-picker
+          formControlName="validRange"
+        ></app-range-date-picker>
+      </div>
       </div>
     </div>
   </div>

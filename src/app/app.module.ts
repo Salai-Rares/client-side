@@ -26,6 +26,7 @@ import { TestFormComponent } from './client/components/test-form/test-form.compo
 import { TestFormModule } from './client/components/test-form/test-form.module';
 import { ImageUploadComponent } from './client/components/image-upload/image-upload.component';
 import { register } from 'swiper/element/bundle';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 register(); 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ register();
    
     // StarsRatingModule,
     TestFormModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent],
