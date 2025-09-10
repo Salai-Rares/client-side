@@ -1,0 +1,150 @@
+<div class="image-upload-section">
+  
+  <div [class.border-image]="config.haveBorder">
+    @if (config.label) {
+  <label>{{ config.label }}</label>
+  }
+ 
+    <!-- Drag and Drop Area -->
+    <div
+      class="drop-zone"
+      [class.drag-over]="isDragOver"
+      [class.processing]="isProcessing"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="!isProcessing && fileInput.click()"
+    >
+      @if (!isProcessing) {
+      <div>
+        {{ config.placeholder || "Drag & drop images here or click to select" }}
+        <div class="file-info">
+          Max size: {{ config.maxSizeInMB }}MB | Formats:
+          {{ config.allowedTypes?.join(", ") }} | Min: {{ config.minWidth }}x{{
+            config.minHeight
+          }}px | Max: {{ config.maxWidth }}x{{ config.maxHeight }}px
+        </div>
+      </div>
+      } @if (isProcessing) {
+      <div class="processing-indicator">
+        <div class="spinner"></div>
+        Processing images...
+      </div>
+      }
+
+      <input
+        #fileInput
+        type="file"
+        (change)="onImageSelected($event)"
+        multiple
+        [accept]="config.allowedTypes?.join(',')"
+        [disabled]="isProcessing"
+        hidden
+      />
+    </div>
+
+    <!-- Error Messages -->
+    @if (imageErrors.length > 0) {
+    <div class="error-messages">
+      <div class="error-header">
+        <span>Some images could not be processed:</span>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="clearImageErrors()"
+        >
+          Dismiss
+        </button>
+      </div>
+      <ul class="error-list">
+        @for (error of imageErrors; track error) {
+        <li class="error-item">{{ error }}</li>
+        }
+      </ul>
+    </div>
+    }
+
+    <!-- Form Array Validation -->
+    @if (formArray.invalid && formArray.touched) {
+    <div class="alert alert-warning">
+      <i class="fas fa-exclamation-triangle"></i>
+      @if (formArray.errors?.['required']) {
+      <span>At least one image is required.</span>
+      } @if (formArray.errors?.['minlength']) {
+      <span
+        >At least {{ formArray.errors?.['minlength']?.requiredLength }} image(s)
+        required.</span
+      >
+      } @if (formArray.errors?.['maxlength']) {
+      <span
+        >Maximum {{ formArray.errors?.['maxlength']?.requiredLength }} images
+        allowed.</span
+      >
+      }
+    </div>
+    }
+
+    <!-- Image Preview with Drag & Drop Reordering -->
+    <div
+      class="image-preview-row cdk-drop-list"
+      cdkDropList
+      [cdkDropListData]="formArray.controls"
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="onImageReorder($event)"
+      [class.has-images]="formArray.length > 0"
+    >
+      @for (imageControl of formArray.controls; track trackByIndex($index); let
+      i = $index) {
+      <div cdkDrag class="image-wrapper">
+        @if (imageControl.get('preview')?.value) {
+        <img
+          [src]="imageControl.get('preview')?.value"
+          [alt]="'Image ' + (i + 1)"
+          class="clickable-image"
+          (click)="openImageModal(imageControl.get('preview')?.value)"
+        />
+        }
+
+        <!-- File info overlay -->
+        @if (imageControl.get('file')?.value) {
+        <div class="image-info">
+          <small>{{
+            getReadableFileSize(imageControl.get("file")?.value?.size)
+          }}</small>
+        </div>
+        }
+
+        <button
+          type="button"
+          class="remove-image-btn"
+          (click)="removeImage(i)"
+          [attr.aria-label]="'Remove image ' + (i + 1)"
+        >
+          &times;
+        </button>
+      </div>
+      }
+
+      <!-- Empty state -->
+      @if (formArray.length === 0) {
+      <div class="empty-state">No images uploaded yet</div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+@if (selectedImage) {
+<div class="image-modal-backdrop" (click)="closeImageModal()">
+  <div cdkTrapFocus class="image-modal" (click)="$event.stopPropagation()">
+    <img [src]="selectedImage" alt="Enlarged view" />
+    <button
+      #closeModalButton
+      class="modal-close-btn"
+      (click)="closeImageModal()"
+    >
+      &times;
+    </button>
+  </div>
+</div>
+}

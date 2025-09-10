@@ -24,6 +24,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@ng-select/ng-select": "^20.1.3",
     "bootstrap": "^5.2.0",
     "rxjs": "~7.5.0",
     "swiper": "^11.2.10",

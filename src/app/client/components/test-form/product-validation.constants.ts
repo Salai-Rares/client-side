@@ -1,0 +1,74 @@
+export const PRODUCT_LIMITS = {
+ NAME: {
+   MIN_LENGTH: 5,
+   MAX_LENGTH: 100,
+ },
+ DESCRIPTION: {
+   MIN_LENGTH: 10,
+   MAX_LENGTH: 20,
+ },
+ SHORT_DESCRIPTION: {
+   MIN_LENGTH: 10,
+   MAX_LENGTH: 300,
+ },
+ SKU: {
+   MIN_LENGTH: 3,
+   MAX_LENGTH: 50,
+ },
+ PRICE: {
+   MIN_AMOUNT: 0,
+   MAX_AMOUNT: 10000,
+ },
+ DISCOUNT: {
+   TYPES:["percentage","fixed"]
+ },
+ IMAGES: {
+   MIN_COUNT: 0,
+   MAX_COUNT: 5,
+   URL_MAX_LENGTH: 1000,
+   ALT_MAX_LENGTH: 150,
+ },
+ CATEGORIES: {
+   MIN_COUNT: 0,
+   MAX_COUNT: 3,
+ },
+ TAGS: {
+   MAX_COUNT: 30,
+   TAG_MAX_LENGTH: 50,
+ },
+ VARIANTS: {
+   MAX_COUNT: 100,
+ },
+ ATTRIBUTES: {
+   MAX_COUNT: 20,
+   KEY_MAX_LENGTH: 100,
+   VALUE_MAX_LENGTH: 500,
+   VALUES_MAX_COUNT: 20,
+ },
+ SEO: {
+   TITLE_MIN_LENGTH: 5,
+   TITLE_MAX_LENGTH: 70,
+   DESCRIPTION_MIN_LENGTH: 10,
+   DESCRIPTION_MAX_LENGTH: 160,
+   KEYWORDS_MAX_COUNT: 15,
+   KEYWORD_MAX_LENGTH: 50,
+   CANONICAL_URL_MAX_LENGTH: 500,
+ },
+ RATINGS: {
+   MIN_AVERAGE: 0,
+   MAX_AVERAGE: 5,
+   MIN_COUNT: 0,
+   DEFAULT : 0
+ },
+ CURRENCY:{
+    DEFAULT:'LEU'
+ },
+ STATUS:{
+    POSSIBLE_VALUES:["draft", "active", "archived", "deleted"],
+    DEFAULT_VALUE:"draft"
+ },
+ AUDIT: {
+   REASON_MAX_LENGTH: 1000,
+ },
+
+} as const;

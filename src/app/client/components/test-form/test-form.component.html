@@ -1,419 +1,558 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <!-- Username -->
   <div class="form-group">
-    <label for="username">Username</label>
+    <label for="name">Nume produs</label>
     <input
-      id="username"
-      formControlName="username"
+      id="name"
+      formControlName="name"
+      class="form-control form-control-validation"
+      autofocus
+      [class.is-invalid]="
+        form.get('name')?.invalid && form.get('name')?.touched
+      "
+    />
+    @if (getErrorMessages('name').length) {
+    <div class="invalid-feedback">
+      @for (msg of getErrorMessages('name'); track $index) {
+      <div>{{ msg }}</div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="sku">SKU</label>
+    <input
+      id="sku"
       class="form-control"
-      [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched"
-      />
-      @if (form.get('username')?.invalid && form.get('username')?.touched) {
-        <div class="invalid-feedback">
-          @if (form.get('username')?.errors?.['required']) {
-            <div>
-              Username is required.
-            </div>
+      formControlName="sku"
+      [class.is-invalid]="form.get('sku')?.invalid && form.get('sku')?.touched"
+    />
+    @if (getErrorMessages('sku').length){
+    <div class="invalid-feedback">
+      @for (msg of getErrorMessages('sku');track $index){
+      <div>{{ msg }}</div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="description">Descriere*</label>
+    <textarea
+      formControlName="description"
+      class="form-control"
+      id="description"
+      rows="3"
+      [maxLength]="PRODUCT_LIMITS.DESCRIPTION.MAX_LENGTH"
+      style="resize: none"
+    >
+    </textarea>
+    <div class="d-flex justify-content-between align-items-start">
+      <!-- Left side: errors -->
+      <div>
+        @if (getErrorMessages('description').length) {
+        <div class="invalid-feedback d-block m-0">
+          @for (msg of getErrorMessages('description'); track $index) {
+          <div>{{ msg }}</div>
           }
         </div>
+        }
+      </div>
+
+      <!-- Right side: counter (always visible) -->
+      <small class="text-muted">
+        {{ form.get("description")?.value?.length || 0 }}
+        / {{ PRODUCT_LIMITS.DESCRIPTION.MAX_LENGTH }} characters
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group position-relative">
+    <label for="shortDescription">Descriere scurta*</label>
+    <textarea
+      formControlName="shortDescription"
+      class="form-control pb-4"
+      id="shortDescription"
+      rows="3"
+      [maxLength]="PRODUCT_LIMITS.SHORT_DESCRIPTION.MAX_LENGTH"
+      style="resize: none"
+    >
+    </textarea>
+    <div class="d-flex justify-content-between align-items-start">
+      <!-- Left side: errors -->
+      <div>
+        @if (getErrorMessages('shortDescription').length) {
+        <div class="invalid-feedback d-block m-0">
+          @for (msg of getErrorMessages('shortDescription'); track $index) {
+          <div>{{ msg }}</div>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Right side: counter (always visible) -->
+      <small class="text-muted">
+        {{ form.get("shortDescription")?.value?.length || 0 }}
+        / {{ PRODUCT_LIMITS.SHORT_DESCRIPTION.MAX_LENGTH }} characters
+      </small>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="brand">Brand*</label>
+    <ng-select
+      [items]="brands$ | async"
+      placeholder="Select brand"
+      bindLabel="name"
+      bindValue="id"
+      formControlName="brands"
+    ></ng-select>
+  </div>
+
+  <div class="form-group">
+    <label for="categories">Categories*</label>
+    <ng-select
+      id="categories"
+      [items]="categories$ | async"
+      placeholder="select categories"
+      multiple="true"
+      formControlName="categories"
+    ></ng-select>
+    @if(getErrorMessages('categories').length){
+    <div class="invalid-feedback">
+      @for (msg of getErrorMessages('categories'); track $index) {
+      <div>{{ msg }}</div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label for="tags">Tags*</label>
+    <ng-select
+      id="tags"
+      [items]="tags$ | async"
+      [multiple]="true"
+      [addTag]="true"
+      formControlName="tags"
+      placeholder="Add tags"
+    >
+    </ng-select>
+  </div>
+  <div class="form-group">
+    <app-image-selector
+      [config]="{ label: 'Main Images', haveBorder: true }"
+      formControlName="mainImages"
+    ></app-image-selector>
+  </div>
+
+  <div class="form-group">
+    <label for="priceId">Price*</label>
+    <input
+      id="priceId"
+      type="number"
+      formControlName="price"
+      class="form-control"
+      placeholder="Enter price"
+      min="0"
+    />
+  </div>
+  <div class="form-group">
+    <div formGroupName="discount">
+      <div class="form-group">
+        <label for="type">Tip discount</label>
+        <ng-select
+          formControlName="type"
+          [items]="['fixed', 'percentage']"
+          id="type"
+        ></ng-select>
+      </div>
+      <div class="form-group">
+        <label for="value">Valoare</label>
+        <input
+          class="form-control"
+          formControlName="value"
+          type="number"
+          min="0"
+          id="value"
+        />
+      </div>
+      <div class="form-group">
+        <label for="date">Expiră în:</label>
+        <input min="{{today}}" class="form-control" type="date" formControlName="date">
+      </div>
+    </div>
+  </div>
+  <!-- Settings Group -->
+  <div formGroupName="settings">
+    <div class="form-group">
+      <label for="threshold">Threshold</label>
+      <input
+        id="threshold"
+        type="number"
+        min="0"
+        formControlName="threshold"
+        class="form-control"
+        [class.is-invalid]="
+          form.get('settings.threshold')?.invalid &&
+          form.get('settings.threshold')?.touched
+        "
+      />
+      @if (form.get('settings.threshold')?.invalid &&
+      form.get('settings.threshold')?.touched) {
+      <div class="invalid-feedback">
+        @if (form.get('settings.threshold')?.errors?.['required']) {
+        <div>Threshold is required.</div>
+        } @if (form.get('settings.threshold')?.errors?.['min']) {
+        <div>Threshold must be at least 0.</div>
+        }
+      </div>
       }
     </div>
 
-    <!-- Settings Group -->
-    <div formGroupName="settings">
-      <div class="form-group">
-        <label for="threshold">Threshold</label>
+    <!-- Tags -->
+    <div formArrayName="tags" class="form-array-section">
+      <h5>Tags</h5>
+      @for (tagControl of tags.controls; track tagControl; let i = $index) {
+      <div class="input-group mb-2">
         <input
-          id="threshold"
-          type="number"
-          min="0"
-          formControlName="threshold"
+          [formControlName]="i"
           class="form-control"
-          [class.is-invalid]="form.get('settings.threshold')?.invalid && form.get('settings.threshold')?.touched"
-          />
-          @if (form.get('settings.threshold')?.invalid && form.get('settings.threshold')?.touched) {
-            <div class="invalid-feedback">
-              @if (form.get('settings.threshold')?.errors?.['required']) {
-                <div>
-                  Threshold is required.
-                </div>
-              }
-              @if (form.get('settings.threshold')?.errors?.['min']) {
-                <div>
-                  Threshold must be at least 0.
-                </div>
-              }
-            </div>
+          placeholder="Enter tag"
+          [class.is-invalid]="tagControl.invalid && tagControl.touched"
+        />
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          (click)="removeTag(i)"
+          [disabled]="tags.length <= 1"
+        >
+          Remove
+        </button>
+        <!-- Individual tag error -->
+        @if (tagControl.invalid && tagControl.touched) {
+        <div class="invalid-feedback d-block">Tag cannot be empty.</div>
+        }
+      </div>
+      }
+
+      <!-- Array-level validation errors -->
+      @if (tags.errors && (tags.dirty || tags.touched)) {
+      <div class="alert alert-danger">
+        @if (tags.errors['emptyTag']) {
+        <div>
+          <i class="fas fa-exclamation-triangle"></i> Tags cannot be empty.
+        </div>
+        } @if (tags.errors['duplicateTag']) {
+        <div>
+          <i class="fas fa-exclamation-triangle"></i> Tags must be unique.
+        </div>
+        }
+      </div>
+      }
+
+      <button type="button" class="btn btn-outline-primary" (click)="addTag()">
+        Add Tag
+      </button>
+    </div>
+  </div>
+
+  <!-- Variants -->
+  <div formArrayName="variants" class="form-array-section">
+    <h5>Product Variants</h5>
+
+    @for (variantGroup of variants.controls; track variantGroup; let vIndex =
+    $index) {
+    <div [formGroupName]="vIndex" class="variant-card">
+      <!-- Price -->
+      <div class="form-group">
+        <label for="price-{{ vIndex }}">Price</label>
+        <input
+          id="price-{{ vIndex }}"
+          type="number"
+          formControlName="price"
+          class="form-control"
+          placeholder="Enter price"
+          min="0"
+          [class.is-invalid]="
+            variantGroup.get('price')?.invalid &&
+            variantGroup.get('price')?.touched
+          "
+        />
+        @if (variantGroup.get('price')?.invalid &&
+        variantGroup.get('price')?.touched) {
+        <div class="invalid-feedback">
+          @if (variantGroup.get('price')?.errors?.['required']) {
+          <div>Price is required.</div>
+          } @if (variantGroup.get('price')?.errors?.['min']) {
+          <div>Price must be at least 0.</div>
           }
         </div>
-
-        <!-- Tags -->
-        <div formArrayName="tags" class="form-array-section">
-          <h5>Tags</h5>
-          @for (tagControl of tags.controls; track tagControl; let i = $index) {
-            <div
-              class="input-group mb-2"
-              >
-              <input
-                [formControlName]="i"
-                class="form-control"
-                placeholder="Enter tag"
-                [class.is-invalid]="tagControl.invalid && tagControl.touched"
-                />
-                <button
-                  type="button"
-                  class="btn btn-outline-danger"
-                  (click)="removeTag(i)"
-                  [disabled]="tags.length <= 1"
-                  >
-                  Remove
-                </button>
-                <!-- Individual tag error -->
-                @if (tagControl.invalid && tagControl.touched) {
-                  <div class="invalid-feedback d-block">
-                    Tag cannot be empty.
-                  </div>
-                }
-              </div>
+        }
+      </div>
+      <!-- Product Options -->
+      <div formArrayName="productOptions" class="mb-3">
+        <label>Product Options</label>
+        @for (option of getProductOptions(vIndex).controls; track option; let
+        oIndex = $index) {
+        <div [formGroupName]="oIndex" class="row g-2 mb-2">
+          <div class="col">
+            <input
+              formControlName="key"
+              class="form-control"
+              placeholder="Option Key (e.g. size)"
+              [class.is-invalid]="
+                option.get('key')?.invalid && option.get('key')?.touched
+              "
+            />
+            @if (option.get('key')?.invalid && option.get('key')?.touched) {
+            <div class="invalid-feedback">Option key is required.</div>
             }
-
-            <!-- Array-level validation errors -->
-            @if (tags.errors && (tags.dirty || tags.touched)) {
-              <div class="alert alert-danger">
-                @if (tags.errors['emptyTag']) {
-                  <div>
-                    <i class="fas fa-exclamation-triangle"></i> Tags cannot be empty.
-                  </div>
-                }
-                @if (tags.errors['duplicateTag']) {
-                  <div>
-                    <i class="fas fa-exclamation-triangle"></i> Tags must be unique.
-                  </div>
-                }
-              </div>
+          </div>
+          <div class="col">
+            <input
+              formControlName="value"
+              class="form-control"
+              placeholder="Option Value (e.g. M)"
+              [class.is-invalid]="
+                option.get('value')?.invalid && option.get('value')?.touched
+              "
+            />
+            @if (option.get('value')?.invalid && option.get('value')?.touched) {
+            <div class="invalid-feedback">Option value is required.</div>
             }
-
-            <button type="button" class="btn btn-outline-primary" (click)="addTag()">
-              Add Tag
+          </div>
+          <div class="col-auto">
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="removeProductOption(vIndex, oIndex)"
+            >
+              Remove
             </button>
           </div>
         </div>
+        }
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="addProductOption(vIndex)"
+        >
+          Add Product Option
+        </button>
+      </div>
+      <!-- Images with Drag & Drop -->
+      <div formArrayName="images" class="mb-3">
+        <label>Variant Images</label>
+        <!-- Drag and Drop Area -->
+        <div
+          class="drop-zone"
+          [class.drag-over]="isDragOver"
+          [class.processing]="isProcessingImages(vIndex)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event, vIndex)"
+          (click)="!isProcessingImages(vIndex) && fileInput.click()"
+        >
+          @if (!isProcessingImages(vIndex)) {
+          <div>
+            Drag & drop images here or click to select
+            <div class="file-info">
+              Max size: 5MB | Formats: JPEG, PNG, WebP | Min: 100x100px | Max:
+              2000x2000px
+            </div>
+          </div>
+          } @if (isProcessingImages(vIndex)) {
+          <div class="processing-indicator">
+            <div class="spinner"></div>
+            Processing images...
+          </div>
+          }
+          <input
+            #fileInput
+            type="file"
+            (change)="onImageSelected($event, vIndex)"
+            multiple
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            [disabled]="isProcessingImages(vIndex)"
+            hidden
+          />
+        </div>
+        <!-- Error Messages -->
+        @if (hasImageErrors(vIndex)) {
+        <div class="error-messages">
+          <div class="error-header">
+            <span>Some images could not be processed:</span>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="clearImageErrors(vIndex)"
+            >
+              Dismiss
+            </button>
+          </div>
+          <ul class="error-list">
+            @for (error of getImageErrors(vIndex); track error) {
+            <li class="error-item">
+              {{ error }}
+            </li>
+            }
+          </ul>
+        </div>
+        }
+        <!-- Images Array Validation -->
+        @if (getVariantImages(vIndex).invalid &&
+        getVariantImages(vIndex).touched) {
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          @if (getVariantImages(vIndex).errors?.['required']) {
+          <span> At least one image is required for this variant. </span>
+          } @if (getVariantImages(vIndex).errors?.['minlength']) {
+          <span>
+            This variant needs at least
+            {{ getVariantImages(vIndex).errors?.['minlength']?.requiredLength }}
+            image(s).
+          </span>
+          }
+        </div>
+        }
+        <!-- Image Preview Row with CDK Drop List -->
+        <div
+          class="image-preview-row cdk-drop-list"
+          cdkDropList
+          [cdkDropListData]="getVariantImages(vIndex).controls"
+          cdkDropListOrientation="horizontal"
+          (cdkDropListDropped)="drop($event, vIndex)"
+          [class.has-images]="getVariantImages(vIndex).length > 0"
+        >
+          @for (imageGroup of getVariantImages(vIndex).controls; track
+          trackByImageIndex(iIndex, imageGroup); let iIndex = $index) {
+          <div cdkDrag [formGroupName]="iIndex" class="image-wrapper">
+            @if (imageGroup.get('preview')?.value) {
+            <img
+              [src]="imageGroup.get('preview')?.value"
+              [alt]="'Variant image ' + (iIndex + 1)"
+              class="clickable-image"
+              (click)="openImageModal(imageGroup.get('preview')?.value)"
+            />
+            }
+            <!-- File info overlay -->
+            @if (imageGroup.get('file')?.value) {
+            <div class="image-info">
+              <small>{{
+                getReadableFileSize(imageGroup.get("file")?.value?.size)
+              }}</small>
+            </div>
+            }
+            <button
+              type="button"
+              class="remove-image-btn"
+              (click)="removeVariantImage(vIndex, iIndex)"
+              [attr.aria-label]="'Remove image ' + (iIndex + 1)"
+            >
+              &times;
+            </button>
+          </div>
+          }
+          <!-- Empty state message -->
+          @if (getVariantImages(vIndex).length === 0) {
+          <div class="empty-state">No images uploaded yet</div>
+          }
+        </div>
+      </div>
+      <!-- Remove Variant -->
+      <div class="text-end mt-3">
+        <button
+          type="button"
+          class="btn btn-danger w-100"
+          (click)="removeVariant(vIndex)"
+          [disabled]="variants.length <= 1"
+        >
+          Remove Variant
+        </button>
+      </div>
+    </div>
+    }
 
-        <!-- Variants -->
-        <div formArrayName="variants" class="form-array-section">
-          <h5>Product Variants</h5>
+    <!-- Add Variant -->
+    <div class="text-end">
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        (click)="addVariant()"
+      >
+        Add Variant
+      </button>
+    </div>
+  </div>
 
-          @for (variantGroup of variants.controls; track variantGroup; let vIndex = $index) {
-            <div
-              [formGroupName]="vIndex"
-              class="variant-card"
-              >
-              <!-- Price -->
-              <div class="form-group">
-                <label for="price-{{ vIndex }}">Price</label>
-                <input
-                  id="price-{{ vIndex }}"
-                  type="number"
-                  formControlName="price"
-                  class="form-control"
-                  placeholder="Enter price"
-                  min="0"
-                  [class.is-invalid]="variantGroup.get('price')?.invalid && variantGroup.get('price')?.touched"
-                  />
-                  @if (variantGroup.get('price')?.invalid && variantGroup.get('price')?.touched) {
-                    <div class="invalid-feedback">
-                      @if (variantGroup.get('price')?.errors?.['required']) {
-                        <div>
-                          Price is required.
-                        </div>
-                      }
-                      @if (variantGroup.get('price')?.errors?.['min']) {
-                        <div>
-                          Price must be at least 0.
-                        </div>
-                      }
-                    </div>
-                  }
-                </div>
-                <!-- Product Options -->
-                <div formArrayName="productOptions" class="mb-3">
-                  <label>Product Options</label>
-                  @for (option of getProductOptions(vIndex).controls; track option; let oIndex = $index) {
-                    <div
-                      [formGroupName]="oIndex"
-                      class="row g-2 mb-2"
-                      >
-                      <div class="col">
-                        <input
-                          formControlName="key"
-                          class="form-control"
-                          placeholder="Option Key (e.g. size)"
-                          [class.is-invalid]="option.get('key')?.invalid && option.get('key')?.touched"
-                          />
-                          @if (option.get('key')?.invalid && option.get('key')?.touched) {
-                            <div class="invalid-feedback">
-                              Option key is required.
-                            </div>
-                          }
-                        </div>
-                        <div class="col">
-                          <input
-                            formControlName="value"
-                            class="form-control"
-                            placeholder="Option Value (e.g. M)"
-                            [class.is-invalid]="option.get('value')?.invalid && option.get('value')?.touched"
-                            />
-                            @if (option.get('value')?.invalid && option.get('value')?.touched) {
-                              <div class="invalid-feedback">
-                                Option value is required.
-                              </div>
-                            }
-                          </div>
-                          <div class="col-auto">
-                            <button
-                              type="button"
-                              class="btn btn-outline-danger"
-                              (click)="removeProductOption(vIndex, oIndex)"
-                              >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      }
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary"
-                        (click)="addProductOption(vIndex)"
-                        >
-                        Add Product Option
-                      </button>
-                    </div>
-                    <!-- Images with Drag & Drop -->
-                    <div formArrayName="images" class="mb-3">
-                      <label>Variant Images</label>
-                      <!-- Drag and Drop Area -->
-                      <div
-                        class="drop-zone"
-                        [class.drag-over]="isDragOver"
-                        [class.processing]="isProcessingImages(vIndex)"
-                        (dragover)="onDragOver($event)"
-                        (dragleave)="onDragLeave($event)"
-                        (drop)="onDrop($event, vIndex)"
-                        (click)="!isProcessingImages(vIndex) && fileInput.click()"
-                        >
-                        @if (!isProcessingImages(vIndex)) {
-                          <div>
-                            Drag & drop images here or click to select
-                            <div class="file-info">
-                              Max size: 5MB | Formats: JPEG, PNG, WebP | Min: 100x100px | Max: 2000x2000px
-                            </div>
-                          </div>
-                        }
-                        @if (isProcessingImages(vIndex)) {
-                          <div class="processing-indicator">
-                            <div class="spinner"></div>
-                            Processing images...
-                          </div>
-                        }
-                        <input
-                          #fileInput
-                          type="file"
-                          (change)="onImageSelected($event, vIndex)"
-                          multiple
-                          accept="image/jpeg,image/jpg,image/png,image/webp"
-                          [disabled]="isProcessingImages(vIndex)"
-                          hidden
-                          />
-                        </div>
-                        <!-- Error Messages -->
-                        @if (hasImageErrors(vIndex)) {
-                          <div class="error-messages">
-                            <div class="error-header">
-                              <span>Some images could not be processed:</span>
-                              <button
-                                type="button"
-                                class="btn btn-sm btn-outline-secondary"
-                                (click)="clearImageErrors(vIndex)"
-                                >
-                                Dismiss
-                              </button>
-                            </div>
-                            <ul class="error-list">
-                              @for (error of getImageErrors(vIndex); track error) {
-                                <li class="error-item">
-                                  {{ error }}
-                                </li>
-                              }
-                            </ul>
-                          </div>
-                        }
-                        <!-- Images Array Validation -->
-                        @if (getVariantImages(vIndex).invalid && getVariantImages(vIndex).touched) {
-                          <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            @if (getVariantImages(vIndex).errors?.['required']) {
-                              <span>
-                                At least one image is required for this variant.
-                              </span>
-                            }
-                            @if (getVariantImages(vIndex).errors?.['minlength']) {
-                              <span>
-                                This variant needs at least {{ getVariantImages(vIndex).errors?.['minlength']?.requiredLength }} image(s).
-                              </span>
-                            }
-                          </div>
-                        }
-                        <!-- Image Preview Row with CDK Drop List -->
-                        <div
-                          class="image-preview-row cdk-drop-list"
-                          cdkDropList
-                          [cdkDropListData]="getVariantImages(vIndex).controls"
-                          cdkDropListOrientation="horizontal"
-                          (cdkDropListDropped)="drop($event, vIndex)"
-                          [class.has-images]="getVariantImages(vIndex).length > 0"
-                          >
-                          @for (imageGroup of getVariantImages(vIndex).controls; track trackByImageIndex(iIndex, imageGroup); let iIndex = $index) {
-                            <div
-                              cdkDrag
-                              [formGroupName]="iIndex"
-                              class="image-wrapper"
-                              >
-                              @if (imageGroup.get('preview')?.value) {
-                                <img
-                                  [src]="imageGroup.get('preview')?.value"
-                                  [alt]="'Variant image ' + (iIndex + 1)"
-                                  class="clickable-image"
-                                  (click)="openImageModal(imageGroup.get('preview')?.value)"
-                                  />
-                              }
-                              <!-- File info overlay -->
-                              @if (imageGroup.get('file')?.value) {
-                                <div class="image-info">
-                                  <small>{{ getReadableFileSize(imageGroup.get("file")?.value?.size) }}</small>
-                                </div>
-                              }
-                              <button
-                                type="button"
-                                class="remove-image-btn"
-                                (click)="removeVariantImage(vIndex, iIndex)"
-                                [attr.aria-label]="'Remove image ' + (iIndex + 1)"
-                                >
-                                &times;
-                              </button>
-                            </div>
-                          }
-                          <!-- Empty state message -->
-                          @if (getVariantImages(vIndex).length === 0) {
-                            <div class="empty-state">
-                              No images uploaded yet
-                            </div>
-                          }
-                        </div>
-                      </div>
-                      <!-- Remove Variant -->
-                      <div class="text-end mt-3">
-                        <button
-                          type="button"
-                          class="btn btn-danger w-100"
-                          (click)="removeVariant(vIndex)"
-                          [disabled]="variants.length <= 1"
-                          >
-                          Remove Variant
-                        </button>
-                      </div>
-                    </div>
-                  }
+  <!-- Submit Button - OPTION 1: Always Enable Submit -->
+  <button
+    type="submit"
+    class="btn mt-4"
+    [class.btn-success]="form.valid"
+    [class.btn-warning]="form.invalid && !isFormSubmitAttempted"
+    [class.btn-danger]="form.invalid && isFormSubmitAttempted"
+    [disabled]="hasAnyProcessing()"
+  >
+    @if (!hasAnyProcessing() && form.valid) {
+    <span> <i class="fas fa-check me-2"></i>Submit Form </span>
+    } @if (!hasAnyProcessing() && form.invalid && !isFormSubmitAttempted) {
+    <span> <i class="fas fa-paper-plane me-2"></i>Submit Form </span>
+    } @if (!hasAnyProcessing() && form.invalid && isFormSubmitAttempted) {
+    <span>
+      <i class="fas fa-exclamation-triangle me-2"></i>Fix
+      {{ getErrorCount() }} Error{{ getErrorCount() === 1 ? "" : "s" }} & Submit
+    </span>
+    } @if (hasAnyProcessing()) {
+    <span>
+      <i class="spinner-border spinner-border-sm me-2"></i>
+      Processing...
+    </span>
+    }
+  </button>
 
-                  <!-- Add Variant -->
-                  <div class="text-end">
-                    <button
-                      type="button"
-                      class="btn btn-outline-success"
-                      (click)="addVariant()"
-                      >
-                      Add Variant
-                    </button>
-                  </div>
-                </div>
+  <!-- Form-level validation summary - Shows after submit attempt -->
+  @if (form.invalid && isFormSubmitAttempted) {
+  <div class="alert alert-danger mt-3">
+    <h6>
+      <i class="fas fa-exclamation-triangle"></i> Please fix the following
+      {{ getErrorCount() }} error{{ getErrorCount() === 1 ? "" : "s" }}:
+    </h6>
+    <ul class="mb-0">
+      @if (form.get('username')?.invalid) {
+      <li>Username is required</li>
+      } @if (form.get('settings.threshold')?.invalid) {
+      <li>Threshold is required and must be at least 0</li>
+      } @if (tags.invalid) {
+      <li>Tags must be valid and unique</li>
+      } @for (variant of variants.controls; track variant; let vIndex = $index)
+      {
+      <li>
+        @if (variant.invalid) {
+        <span>
+          Variant {{ vIndex + 1 }}: @if (variant.get('price')?.invalid) {
+          <span>Price required, </span>
+          } @if (getProductOptions(vIndex).invalid) {
+          <span>Product options required, </span>
+          } @if (getVariantImages(vIndex).invalid) {
+          <span>Images required</span>
+          }
+        </span>
+        }
+      </li>
+      }
+    </ul>
+  </div>
+  }
+</form>
 
-                <!-- Submit Button - OPTION 1: Always Enable Submit -->
-                <button
-                  type="submit"
-                  class="btn mt-4"
-                  [class.btn-success]="form.valid"
-                  [class.btn-warning]="form.invalid && !isFormSubmitAttempted"
-                  [class.btn-danger]="form.invalid && isFormSubmitAttempted"
-                  [disabled]="hasAnyProcessing()"
-                  >
-                  @if (!hasAnyProcessing() && form.valid) {
-                    <span>
-                      <i class="fas fa-check me-2"></i>Submit Form
-                    </span>
-                  }
-                  @if (!hasAnyProcessing() && form.invalid && !isFormSubmitAttempted) {
-                    <span>
-                      <i class="fas fa-paper-plane me-2"></i>Submit Form
-                    </span>
-                  }
-                  @if (!hasAnyProcessing() && form.invalid && isFormSubmitAttempted) {
-                    <span>
-                      <i class="fas fa-exclamation-triangle me-2"></i>Fix {{ getErrorCount() }} Error{{ getErrorCount() === 1 ? '' : 's' }} & Submit
-                    </span>
-                  }
-                  @if (hasAnyProcessing()) {
-                    <span>
-                      <i class="spinner-border spinner-border-sm me-2"></i>
-                      Processing...
-                    </span>
-                  }
-                </button>
-
-                <!-- Form-level validation summary - Shows after submit attempt -->
-                @if (form.invalid && isFormSubmitAttempted) {
-                  <div class="alert alert-danger mt-3">
-                    <h6><i class="fas fa-exclamation-triangle"></i> Please fix the following {{ getErrorCount() }} error{{ getErrorCount() === 1 ? '' : 's' }}:</h6>
-                    <ul class="mb-0">
-                      @if (form.get('username')?.invalid) {
-                        <li>Username is required</li>
-                      }
-                      @if (form.get('settings.threshold')?.invalid) {
-                        <li>Threshold is required and must be at least 0</li>
-                      }
-                      @if (tags.invalid) {
-                        <li>Tags must be valid and unique</li>
-                      }
-                      @for (variant of variants.controls; track variant; let vIndex = $index) {
-                        <li>
-                          @if (variant.invalid) {
-                            <span>
-                              Variant {{ vIndex + 1 }}:
-                              @if (variant.get('price')?.invalid) {
-                                <span>Price required, </span>
-                              }
-                              @if (getProductOptions(vIndex).invalid) {
-                                <span>Product options required, </span>
-                              }
-                              @if (getVariantImages(vIndex).invalid) {
-                                <span>Images required</span>
-                              }
-                            </span>
-                          }
-                        </li>
-                      }
-                    </ul>
-                  </div>
-                }
-              </form>
-
-              <!-- Image Modal -->
-              @if (selectedImage) {
-                <div
-                  class="image-modal-backdrop"
-                  (click)="closeImageModal()"
-                  >
-                  <div class="image-modal" (click)="$event.stopPropagation()">
-                    <img [src]="selectedImage" alt="Enlarged view" />
-                    <button class="modal-close-btn" (click)="closeImageModal()">&times;</button>
-                  </div>
-                </div>
-              }
+<!-- Image Modal -->
+@if (selectedImage) {
+<div class="image-modal-backdrop" (click)="closeImageModal()">
+  <div class="image-modal" (click)="$event.stopPropagation()">
+    <img [src]="selectedImage" alt="Enlarged view" />
+    <button class="modal-close-btn" (click)="closeImageModal()">&times;</button>
+  </div>
+</div>
+}

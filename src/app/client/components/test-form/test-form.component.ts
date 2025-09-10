@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -13,23 +13,36 @@ import {
   ImageProcessingService,
   ProcessedImage,
 } from 'src/app/shared/services/image-processing.service';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { PRODUCT_LIMITS } from './product-validation.constants';
+import { FormErrorService } from 'src/app/shared/services/form-error.service';
 
 @Component({
-    selector: 'app-test-form',
-    templateUrl: './test-form.component.html',
-    styleUrls: ['./test-form.component.scss'],
-    standalone: false
+  selector: 'app-test-form',
+  templateUrl: './test-form.component.html',
+  styleUrls: ['./test-form.component.scss'],
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestFormComponent {
+  PRODUCT_LIMITS = PRODUCT_LIMITS;
   form: FormGroup;
   isDragOver = false;
   selectedImage: string | null = null;
   processingImages: { [variantIndex: number]: boolean } = {};
   imageErrors: { [variantIndex: number]: string[] } = {};
+  categories$ = new BehaviorSubject<string[]>([
+    'categ1',
+    'categ2',
+    'categ3',
+    'muie',
+  ]);
+  brands$ = new BehaviorSubject<string[]>(['brand1', 'brand2']);
+  tags$ = new BehaviorSubject<string[]>(['tag1', 'tag2']);
 
   // Track if form submission has been attempted
   isFormSubmitAttempted = false;
-
+  today = new Date().toLocaleDateString('en-CA');
   // Image validation configuration
   private readonly imageConfig: ImageValidationConfig = {
     maxSizeInMB: 5,
@@ -42,10 +55,49 @@ export class TestFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    private imageProcessingService: ImageProcessingService
+    private imageProcessingService: ImageProcessingService,
+    private formErrorService: FormErrorService
   ) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(PRODUCT_LIMITS.NAME.MIN_LENGTH),
+          Validators.maxLength(PRODUCT_LIMITS.NAME.MAX_LENGTH),
+        ],
+      ],
+      sku: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(PRODUCT_LIMITS.SKU.MIN_LENGTH),
+          Validators.maxLength(PRODUCT_LIMITS.SKU.MAX_LENGTH),
+        ],
+      ],
+      description: [
+        '',
+        [
+          Validators.minLength(PRODUCT_LIMITS.DESCRIPTION.MIN_LENGTH),
+          Validators.maxLength(PRODUCT_LIMITS.DESCRIPTION.MAX_LENGTH),
+        ],
+      ],
+      shortDescription: [
+        '',
+        [
+          Validators.minLength(PRODUCT_LIMITS.SHORT_DESCRIPTION.MIN_LENGTH),
+          Validators.maxLength(PRODUCT_LIMITS.SHORT_DESCRIPTION.MAX_LENGTH),
+        ],
+      ],
+      brands: [null],
+      tags: ['', [Validators.maxLength(PRODUCT_LIMITS.TAGS.MAX_COUNT)]],
+      mainImages: [null],
+      price: [0],
+      discount: this.fb.group({
+        type: this.fb.control([]),
+        value: [0],
+        date: [null],
+      }),
       settings: this.fb.group({
         threshold: [5, [Validators.required, Validators.min(0)]],
         tags: this.fb.array(
@@ -54,6 +106,7 @@ export class TestFormComponent {
         ),
       }),
       variants: this.fb.array([this.createVariantGroup()]),
+      categories: this.fb.control([], [Validators.required]),
     });
   }
 
@@ -404,18 +457,12 @@ export class TestFormComponent {
     this.processingImages = {};
     this.imageErrors = {};
     this.selectedImage = null;
+  }
 
-    // Recreate initial form structure
-    this.form = this.fb.group({
-      username: ['', Validators.required],
-      settings: this.fb.group({
-        threshold: [5, [Validators.required, Validators.min(0)]],
-        tags: this.fb.array(
-          [this.fb.control('default')],
-          this.validateTagsArray
-        ),
-      }),
-      variants: this.fb.array([this.createVariantGroup()]),
-    });
+  getErrorMessages(controlName: string) {
+    return this.formErrorService.getMessages(
+      this.form.get(controlName),
+      controlName
+    );
   }
 }
